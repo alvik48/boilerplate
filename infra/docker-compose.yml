@@ -1,0 +1,38 @@
+# docker-compose.yml
+
+services:
+  # ------------------
+  # PostgreSQL Database 🐘
+  # ------------------
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: qwerty
+    ports:
+      # Exposes the PostgreSQL port to your host machine
+      - "5432:5432"
+    volumes:
+      # Persists database data across container restarts
+      - postgres_data:/var/lib/postgresql/data
+
+  # ------------------
+  # Redis Cache 💾
+  # ------------------
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      # Exposes the Redis port to your host machine
+      - "6379:6379"
+    volumes:
+      # Persists Redis data
+      - redis_data:/data
+
+# Define named volumes for data persistence
+volumes:
+  postgres_data:
+  redis_data:
