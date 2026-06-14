@@ -69,5 +69,7 @@ generated/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# AI agent skills
+# AI
+/.claude/
+/.codex/
 /.agents/skills/

@@ -61,7 +61,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-sans);
+    font-family: var(--font-sans, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
     letter-spacing: var(--letter-spacing);
   }
 

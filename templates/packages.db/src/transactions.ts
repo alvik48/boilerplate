@@ -9,7 +9,7 @@ export type DbClient = PrismaClient | DbTransactionClient;
  * @param callback - Work to execute with the transaction-scoped client.
  * @returns the callback result after the transaction commits.
  */
-export const runInTransaction = async <T>(
+export const runInTransaction = <T>(
   prisma: PrismaClient,
   callback: (tx: DbTransactionClient) => Promise<T>,
 ): Promise<T> => prisma.$transaction((tx) => callback(tx));
