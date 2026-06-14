@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["prisma:generate"],
+      "env": ["POSTGRES_URL"],
+      "outputs": ["dist/**"]
+    },
+    "lint": {
+      "env": ["POSTGRES_URL"]
+    },
+    "prisma:generate": {
+      "env": ["POSTGRES_URL"],
+      "outputs": ["generated/**"]
+    },
+    "prisma:migrate": {
+      "env": ["POSTGRES_URL"],
+      "cache": false
+    },
+    "prisma:deploy": {
+      "env": ["POSTGRES_URL"],
+      "cache": false
+    },
+    "prisma:reset": {
+      "env": ["POSTGRES_URL"],
+      "cache": false
+    }
+  }
+}

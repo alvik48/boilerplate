@@ -1,135 +1,116 @@
-# Turborepo starter
+# Monorepo boilerplate
 
-This Turborepo starter is maintained by the Turborepo core team.
+AI agents must start here. This README is the repository entry point and the
+navigation layer for task-specific instructions. Load only the documents needed
+for the current task.
 
-## Using this example
+## Repository Documentation
 
-Run the following command:
+- [docs/repository/README.md](docs/repository/README.md) - documentation index
+  and context loading map.
+- [docs/repository/structure.md](docs/repository/structure.md) - repository
+  layout, ownership boundaries, package naming, import rules.
+- [docs/repository/development-rules.md](docs/repository/development-rules.md) -
+  shared development rules and constraints.
+- [docs/repository/commands.md](docs/repository/commands.md) - root commands,
+  filtered package commands, Turbo usage.
+- [docs/repository/templates.md](docs/repository/templates.md) - how to create
+  new apps and packages by copying templates.
+- [docs/repository/backend.md](docs/repository/backend.md) - NestJS backend
+  service rules.
+- [docs/repository/frontend.md](docs/repository/frontend.md) - Next.js frontend
+  and shared UI rules.
+- [docs/repository/databases.md](docs/repository/databases.md) - Prisma database
+  package workflow.
+- [docs/repository/env.md](docs/repository/env.md) - `.env` placement,
+  examples, and secrets policy.
+- [docs/repository/quality.md](docs/repository/quality.md) - ESLint, Prettier,
+  typechecking, tests, and Definition of Done.
+- [docs/repository/skills.md](docs/repository/skills.md) - available local
+  AI-agent skills and when to load them.
+- [docs/repository/mcp-servers.md](docs/repository/mcp-servers.md) -
+  recommended MCP servers and when to use them.
+- [docs/repository/change-workflow.md](docs/repository/change-workflow.md) - safe
+  workflow for updating and extending code.
+
+## Quick Context Map
+
+- Any task: read this README, then
+  [docs/repository/README.md](docs/repository/README.md).
+- New app or package: add
+  [docs/repository/templates.md](docs/repository/templates.md),
+  [docs/repository/structure.md](docs/repository/structure.md), and
+  [docs/repository/commands.md](docs/repository/commands.md).
+- Backend task: add [docs/repository/backend.md](docs/repository/backend.md). If
+  it touches persistence, also add
+  [docs/repository/databases.md](docs/repository/databases.md) and
+  [docs/repository/env.md](docs/repository/env.md).
+- Frontend task: add [docs/repository/frontend.md](docs/repository/frontend.md).
+  If it touches shared UI, also inspect `packages/ui`.
+- Database task: add [docs/repository/databases.md](docs/repository/databases.md)
+  and [docs/repository/env.md](docs/repository/env.md).
+- Build, lint, type, or test task: add
+  [docs/repository/quality.md](docs/repository/quality.md) and
+  [docs/repository/commands.md](docs/repository/commands.md).
+- Skill selection: add [docs/repository/skills.md](docs/repository/skills.md).
+- MCP/tool selection: add
+  [docs/repository/mcp-servers.md](docs/repository/mcp-servers.md).
+
+## Current Architecture
+
+This is a pnpm and Turborepo TypeScript monorepo.
+
+- `apps/*` contains deployable applications. It is currently empty.
+- `packages/*` contains shared libraries and database packages.
+- `templates/*` contains canonical templates. New apps and DB packages must be
+  created by copying and adapting these templates, not by starting from scratch.
+- `packages/eslint-config` and `packages/typescript-config` are shared tooling
+  contracts.
+- `packages/ui` is the shared React UI package configured with shadcn and
+  Tailwind CSS.
+- `skills-lock.json` locks project AI-agent skills; installed skill files live
+  under ignored `.agents/skills`.
+
+## Essential Commands
+
+Run commands from the repository root unless a document says otherwise.
 
 ```sh
-npx create-turbo@latest
+pnpm install
+pnpm build
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm format
 ```
 
-## What's inside?
+Use filtered commands for focused work:
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```sh
+pnpm --filter @apps/frontend.example dev
+pnpm --filter @apps/backend.example dev
+pnpm --filter @packages/db-example prisma:generate
+pnpm --filter @packages/db-example prisma:migrate -- --name add_table
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+See [docs/repository/commands.md](docs/repository/commands.md) for the full
+command reference and Turbo rules.
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+## Definition of Done
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+A change is done only when:
 
-### Develop
+- The relevant task-specific docs above have been followed.
+- Affected documentation has been checked against the current code and config,
+  and any drift has been fixed in the same change.
+- New apps or DB packages come from `templates/*` and placeholders are replaced.
+- Shared code is placed in `packages/*` and exported through package exports.
+- `.env` files are not committed, and required variables are documented in a
+  local `.env.example`.
+- Lint, typecheck, build, and relevant tests have been run or the reason they
+  could not run is documented.
+- Generated files are not edited by hand.
+- Cross-package dependencies are declared with `workspace:*`.
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+See [docs/repository/quality.md](docs/repository/quality.md) for the detailed
+checklist.
