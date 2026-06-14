@@ -1,0 +1,13 @@
+{
+  "name": "@packages/typescript-config",
+  "version": "0.0.1",
+  "private": true,
+  "license": "UNLICENSED",
+  "exports": {
+    "./base.json": "./base.json",
+    "./nest.json": "./nest.json",
+    "./node.json": "./node.json",
+    "./nextjs.json": "./nextjs.json",
+    "./react-library.json": "./react-library.json"
+  }
+}

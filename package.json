@@ -1,20 +1,29 @@
 {
-  "name": "app-name",
+  "name": "monorepo-boilerplate",
+  "version": "0.0.1",
   "private": true,
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@10.20.0",
   "scripts": {
+    "prepare": "husky",
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --parallel",
+    "format": "turbo run format",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "skills:list": "pnpm exec skills list",
+    "skills:install": "pnpm exec skills experimental_install",
+    "skills:update": "pnpm exec skills update",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "prettier": "^3.7.4",
-    "turbo": "^2.7.4",
-    "typescript": "5.9.2"
-  },
-  "packageManager": "pnpm@9.0.0",
-  "engines": {
-    "node": ">=18"
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.4",
+    "shadcn": "^4.11.0",
+    "skills": "^1.5.11",
+    "turbo": "^2.9.18",
+    "typescript": "6.0.3"
   }
 }

@@ -1,41 +1,73 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # Dependencies
-node_modules
-.pnp
-.pnp.js
+node_modules/
+/.pnpm-store/
 
-# Local env files
+# Build and compiler output
+dist/
+build/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+/.nyc_output/
+
+# Logs
+/logs/*
+!/logs/.gitkeep
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime and diagnostic files
+pids
+*.pid
+*.seed
+*.pid.lock
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Local data
+/data/*
+!/data/.gitkeep
+apps/**/data/*
+!apps/**/data/.gitkeep
+
+# Environment files
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Testing
-coverage
+# Generated output
+generated/
 
-# Turbo
-.turbo
+# Temporary files
+.temp
+.tmp
+/tmp/
 
-# Vercel
-.vercel
-
-# Build Outputs
-.next/
-out/
-build
-dist
-
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Misc
+# Editors and IDEs
 .DS_Store
-*.pem
-/.idea/
-/.vscode/
-/logs/
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# VS Code workspace settings
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# AI agent skills
+/.agents/skills/

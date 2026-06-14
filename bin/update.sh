@@ -7,8 +7,9 @@ echo "Installing NPM dependencies"
 pnpm install
 
 echo "Updating Prisma"
-pnpm --filter backend_api run prisma:migrate:deploy
-pnpm --filter backend_api run prisma:generate
+# Apply Prisma migrations and client generation for each DB
+# pnpm --filter @packages/<db_name> run prisma:migrate:deploy
+# pnpm --filter @packages/<db_name> run prisma:generate
 
 echo "Building packages"
 pnpm --filter "@packages/*" build

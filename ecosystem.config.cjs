@@ -13,9 +13,13 @@
  *   pm2 monit                                    # Monitor apps
  */
 
+// const LOGS_DIR = `${__dirname}/logs`;
+// Create also the common structures to prevent the code duplication
+
 module.exports = {
   apps: [
-    {
+    // Examples:
+    /*{
       name: 'backend_core',
       cwd: './apps/backend.core',
       script: 'dist/src/main.js',
@@ -29,8 +33,8 @@ module.exports = {
       max_memory_restart: '500M',
       kill_timeout: 5000,
       restart_delay: 1000,
-      error_file: `${__dirname}/logs/backend.core.error.log`,
-      out_file: `${__dirname}/logs/backend.core.out.log`,
+      error_file: `${LOGS_DIR}/backend.core.error.log`,
+      out_file: `${LOGS_DIR}/backend.core.out.log`,
       merge_logs: true,
       time: true,
       watch: false,
@@ -50,11 +54,11 @@ module.exports = {
       max_memory_restart: '500M',
       kill_timeout: 5000,
       restart_delay: 1000,
-      error_file: `${__dirname}/logs/frontend.dashboard.error.log`,
-      out_file: `${__dirname}/logs/frontend.dashboard.out.log`,
+      error_file: `${LOGS_DIR}/frontend.dashboard.error.log`,
+      out_file: `${LOGS_DIR}/frontend.dashboard.out.log`,
       merge_logs: true,
       time: true,
       watch: false,
-    }
+    }*/
   ],
 };
