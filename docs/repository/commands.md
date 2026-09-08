@@ -74,20 +74,34 @@ applying committed migrations in CI or production-like environments.
 
 ## Skill Commands
 
-Skill identities and source hashes are tracked in `skills-lock.json`. Installed
-skill files live under `.agents/skills`, which is ignored by git and should be
-treated as generated output.
+Project skills and all their supporting files are committed under `.agents/skills`.
+Cloning the repository provides the reviewed versions without an upstream download.
+`skills-lock.json` records skill identities, sources, and hashes for maintenance;
+Git preserves the actual contents.
 
 Current root `package.json` exposes:
 
 ```sh
 pnpm skills:list
-pnpm skills:install
 pnpm skills:update
 ```
 
-After installing or updating skills, review and commit changes to
-`skills-lock.json`. Do not hand-edit `.agents/skills`.
+`skills:list` lists local skills. `skills:update` runs `skills update --project`
+and downloads upstream versions only for this project's skills. Run it explicitly
+as a dedicated maintenance change, then review and commit `.agents/skills` and
+`skills-lock.json` together. To update one skill:
+
+```sh
+pnpm skills:update shadcn
+```
+
+There is no `skills:install` bootstrap step. Recover accidentally deleted skill
+files from Git, not by reinstalling from upstream. The CLI's
+`experimental_install` refreshes contents and hashes from recorded sources; it
+does not restore an immutable snapshot by `computedHash`.
+
+See [skills.md](skills.md#maintaining-vendored-skills) for adding skills, preserving
+licenses, and handling removed upstream sources.
 
 ## Commit Hooks
 

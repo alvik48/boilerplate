@@ -47,8 +47,8 @@ for the current task.
   `templates/packages.db`.
 - Shared configs: `packages/eslint-config`, `packages/typescript-config`.
 - Shared UI: `packages/ui`.
-- Local project skills lock: `skills-lock.json`.
-- Installed local skills: `.agents/skills/*`.
+- Project skill source metadata and hashes: `skills-lock.json`.
+- Vendored project skills, available after cloning: `.agents/skills/*`.
 - MCP server config: `.mcp.json`.
 
 ## Template Placeholders

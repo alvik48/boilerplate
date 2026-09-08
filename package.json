@@ -11,8 +11,7 @@
     "format": "turbo run format",
     "lint": "turbo run lint",
     "skills:list": "pnpm exec skills list",
-    "skills:install": "pnpm exec skills experimental_install",
-    "skills:update": "pnpm exec skills update",
+    "skills:update": "pnpm exec skills update --project",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck"
   },

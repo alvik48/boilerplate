@@ -72,8 +72,10 @@ This is a pnpm and Turborepo TypeScript monorepo.
   contracts.
 - `packages/ui` is the shared React UI package configured with shadcn and
   Tailwind CSS.
-- `skills-lock.json` locks project AI-agent skills; installed skill files live
-  under ignored `.agents/skills`.
+- `.agents/skills` contains project AI-agent skills committed with their supporting
+  files. They are available immediately after cloning; no skill installation is
+  required. `skills-lock.json` records upstream sources and hashes for explicit
+  updates. See [skills.md](docs/repository/skills.md).
 - `.agents/plans/` contains temporary, Git-ignored implementation plans. Create
   the directory when needed and delete completed plans after updating permanent
   documentation. See [change workflow](docs/repository/change-workflow.md#temporary-implementation-plans).

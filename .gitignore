@@ -72,7 +72,6 @@ generated/
 # AI
 /.claude/
 /.codex/
-/.agents/skills/
 
 # Temporary AI implementation plans
 /.agents/plans/

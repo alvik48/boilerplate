@@ -1,0 +1,2 @@
+# Preserve vendored skill contents and their recorded source hashes.
+/.agents/skills/

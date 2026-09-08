@@ -89,12 +89,18 @@ fetches.
 
 Load these local skills when working on frontend code:
 
-- `next-best-practices` for App Router, RSC boundaries, metadata, route handlers,
-  images, fonts, and hydration issues.
-- `next-cache-components` when enabling or debugging Next.js 16 Cache Components.
-- `next-upgrade` for Next.js upgrade work.
+- `next-cache-components-adoption` when enabling Cache Components or migrating
+  an existing app to use them.
+- `next-cache-components-optimizer` for cache boundaries and prerendering
+  performance in apps using Cache Components.
 - `frontend-design` for substantial visual design or redesign tasks.
 - `shadcn` for shared UI components, registries, forms, icons, and composition.
 - `typescript-magician` for type issues.
 
-See [skills.md](skills.md).
+For App Router, RSC boundaries, metadata, route handlers, images, fonts,
+hydration, and Next.js upgrades, consult documentation matching the app's
+installed Next.js version through `next-devtools`. The upstream
+`next-best-practices` and `next-upgrade` skills have been retired.
+
+See [skills.md](skills.md) for the source migration and
+[mcp-servers.md](mcp-servers.md) for Next.js tooling.

@@ -23,6 +23,11 @@ pnpm --filter <package> format
 
 Formatting scripts write files.
 
+Root `.prettierignore` excludes `.agents/skills` so repository-wide Prettier runs
+preserve vendored skill contents and their recorded hashes. Review upstream skill
+formatting as part of explicit skill maintenance rather than applying project
+formatting to those files.
+
 ## Linting
 
 Run:

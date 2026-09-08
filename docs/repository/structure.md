@@ -3,6 +3,7 @@
 ## Top-Level Layout
 
 ```text
+.agents/skills/            vendored project AI-agent skills and supporting files
 .agents/plans/             temporary local implementation plans, ignored by Git
 apps/                     deployable applications
 packages/                 shared libraries, tooling configs, database packages
@@ -11,6 +12,10 @@ docs/repository/          AI-ready development documentation
 docs/                     permanent project documentation and guides
 scripts/                  repository automation, currently empty
 ```
+
+`.agents/skills` is versioned, not generated output. `skills-lock.json` records
+upstream source metadata for explicit updates; a clone already includes the skill
+files. See [skills.md](skills.md) for maintenance and license attribution.
 
 `.agents/plans/` is created on demand and holds one Markdown plan per task. Plans
 are local to the checkout and are not transferred by Git to other clones or
