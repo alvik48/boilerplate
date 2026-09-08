@@ -3,13 +3,19 @@
 ## Top-Level Layout
 
 ```text
+.agents/plans/             temporary local implementation plans, ignored by Git
 apps/                     deployable applications
 packages/                 shared libraries, tooling configs, database packages
 templates/                canonical source templates for new apps/packages
 docs/repository/          AI-ready development documentation
-docs/                     product or long-form docs, currently empty
+docs/                     permanent project documentation and guides
 scripts/                  repository automation, currently empty
 ```
+
+`.agents/plans/` is created on demand and holds one Markdown plan per task. Plans
+are local to the checkout and are not transferred by Git to other clones or
+worktrees. See [change workflow](change-workflow.md#temporary-implementation-plans)
+for naming, progress updates, and cleanup rules.
 
 `pnpm-workspace.yaml` includes:
 

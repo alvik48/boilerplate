@@ -2,6 +2,28 @@
 
 Use this workflow when updating or extending existing code.
 
+## Temporary Implementation Plans
+
+- When a task needs a file-based plan, use `.agents/plans/<task-slug>.md` from the
+  repository root. Create the directory on demand; simple tasks do not require a
+  plan file.
+- Use a descriptive, unique kebab-case task slug. Keep one plan per task and load
+  only the relevant plan when continuing work.
+- Record the scope, implementation steps, validation criteria, and current
+  progress. Update completed steps, outstanding work, and relevant decisions as
+  implementation proceeds so another session can resume the task.
+- Treat plans as temporary working material. `.agents/plans/` is ignored by Git;
+  do not commit plans or store them in `docs/`. Git does not transfer these local
+  files to other clones or worktrees.
+- Permanent documentation must remain useful without plan files. Link to these
+  lifecycle rules when needed, never to individual temporary plans. Exclude plans
+  from published documentation, search indexes, AI exports, and project MCP
+  documentation resources.
+- After implementation and validation, document the resulting architecture,
+  contracts, and relevant decision rationale in the appropriate permanent docs.
+  Then delete that task's plan. Keep unfinished plans available for resumption;
+  do not archive completed plans in the repository or delete unrelated plans.
+
 ## 1. Understand The Current State
 
 - Read the root [README.md](../../README.md) and the relevant

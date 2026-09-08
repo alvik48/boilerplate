@@ -6,6 +6,7 @@ for the current task.
 
 ## Repository Documentation
 
+- [docs/README.md](docs/README.md) - project documentation entry point.
 - [docs/repository/README.md](docs/repository/README.md) - documentation index
   and context loading map.
 - [docs/repository/structure.md](docs/repository/structure.md) - repository
@@ -37,6 +38,9 @@ for the current task.
 
 - Any task: read this README, then
   [docs/repository/README.md](docs/repository/README.md).
+- Planning work: add
+  [docs/repository/change-workflow.md](docs/repository/change-workflow.md#temporary-implementation-plans)
+  for temporary implementation plan rules.
 - New app or package: add
   [docs/repository/templates.md](docs/repository/templates.md),
   [docs/repository/structure.md](docs/repository/structure.md), and
@@ -70,6 +74,9 @@ This is a pnpm and Turborepo TypeScript monorepo.
   Tailwind CSS.
 - `skills-lock.json` locks project AI-agent skills; installed skill files live
   under ignored `.agents/skills`.
+- `.agents/plans/` contains temporary, Git-ignored implementation plans. Create
+  the directory when needed and delete completed plans after updating permanent
+  documentation. See [change workflow](docs/repository/change-workflow.md#temporary-implementation-plans).
 
 ## Essential Commands
 

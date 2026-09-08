@@ -23,6 +23,7 @@ for the current task.
 | Shared UI work              | [frontend.md](frontend.md), [skills.md](skills.md), [mcp-servers.md](mcp-servers.md), inspect `packages/ui`              |
 | Database/Prisma work        | [databases.md](databases.md), [env.md](env.md), [quality.md](quality.md)                                                 |
 | Refactor or extend code     | [change-workflow.md](change-workflow.md), [development-rules.md](development-rules.md), [mcp-servers.md](mcp-servers.md) |
+| Plan implementation         | [change-workflow.md](change-workflow.md#temporary-implementation-plans)                                                  |
 | Choose AI skills or MCP     | [skills.md](skills.md), [mcp-servers.md](mcp-servers.md)                                                                 |
 
 ## Documentation Rules
