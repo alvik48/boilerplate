@@ -1,3 +1,11 @@
+---
+id: repository-change-workflow
+title: 'Change Workflow'
+description: 'Change Workflow for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # Change Workflow
 
 Use this workflow when updating or extending existing code.
@@ -91,6 +99,14 @@ Pay special attention when you alter:
 - Database workflow.
 - Shared config packages.
 - Public package exports.
+- External APIs, events, webhooks, MCP capabilities, SDKs, file formats, and
+  consumer-visible workflow or compatibility behavior.
+
+For external impact, follow [documentation.md](documentation.md): update affected
+`docs/integration/` guides together with schemas, examples, and migration notes.
+Regenerate and verify the references,
+search, Markdown exports, and project MCP content from the same revision. Record
+the reason when a code change has no external documentation impact.
 
 ## 6. Report Results
 
@@ -100,3 +116,10 @@ When finishing, report:
 - Commands run and whether they passed.
 - Any skipped verification and why.
 - Any follow-up risk, especially migrations, env variables, or generated output.
+
+## Documentation Release Validation
+
+Run `pnpm docs:check` for every docs or external contract change, then relevant
+browser/MCP tests. Root `docs/` changes must schedule this graph even when CI uses
+package-based affected selection. Guides, references, search and MCP are generated
+from the same revision; deploy and roll back their complete artifact together.

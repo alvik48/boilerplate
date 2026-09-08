@@ -7,6 +7,10 @@ for the current task.
 ## Repository Documentation
 
 - [docs/README.md](docs/README.md) - project documentation entry point.
+- [docs/integration/README.md](docs/integration/README.md) - external integration
+  guidance and current availability for client developers and their agents.
+- [docs/repository/documentation.md](docs/repository/documentation.md) -
+  documentation ownership and required updates for external contract changes.
 - [docs/repository/README.md](docs/repository/README.md) - documentation index
   and context loading map.
 - [docs/repository/structure.md](docs/repository/structure.md) - repository
@@ -41,6 +45,9 @@ for the current task.
 - Planning work: add
   [docs/repository/change-workflow.md](docs/repository/change-workflow.md#temporary-implementation-plans)
   for temporary implementation plan rules.
+- External API, event, webhook, MCP, SDK, or other consumer contract changes: add
+  [documentation rules](docs/repository/documentation.md) and the affected guides
+  under [docs/integration](docs/integration/README.md).
 - New app or package: add
   [docs/repository/templates.md](docs/repository/templates.md),
   [docs/repository/structure.md](docs/repository/structure.md), and
@@ -64,7 +71,7 @@ for the current task.
 
 This is a pnpm and Turborepo TypeScript monorepo.
 
-- `apps/*` contains deployable applications. It is currently empty.
+- `apps/*` contains deployable applications, including `apps/frontend.docs` (Fumadocs on port 3002).
 - `packages/*` contains shared libraries and database packages.
 - `templates/*` contains canonical templates. New apps and DB packages must be
   created by copying and adapting these templates, not by starting from scratch.
@@ -91,6 +98,9 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm format
+pnpm docs:dev
+pnpm docs:check
+pnpm docs:build
 ```
 
 Use filtered commands for focused work:
@@ -112,6 +122,9 @@ A change is done only when:
 - The relevant task-specific docs above have been followed.
 - Affected documentation has been checked against the current code and config,
   and any drift has been fixed in the same change.
+- External contract and behavior changes include updated integration guidance,
+  applicable schemas/examples, and compatibility or migration notes in the same
+  change; see [documentation rules](docs/repository/documentation.md).
 - New apps or DB packages come from `templates/*` and placeholders are replaced.
 - Shared code is placed in `packages/*` and exported through package exports.
 - `.env` files are not committed, and required variables are documented in a

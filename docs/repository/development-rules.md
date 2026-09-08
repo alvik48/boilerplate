@@ -1,3 +1,11 @@
+---
+id: repository-development-rules
+title: 'Development Rules'
+description: 'Development Rules for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # Development Rules
 
 ## Core Rules
@@ -76,3 +84,7 @@ filtered `dev` command for the app you are touching.
 - Update `docs/repository/*` when changing architecture, commands, templates,
   env workflow, or quality gates.
 - Keep instructions concrete: exact command, exact package, exact path.
+- External contract or behavior changes must update the affected
+  `docs/integration/` guides, applicable schemas/examples, and compatibility
+  notes in the same change. Follow [documentation.md](documentation.md), including
+  its rules for publishing integration content through the project MCP server.

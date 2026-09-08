@@ -1,0 +1,4 @@
+generated/
+.source/
+.next/
+next-env.d.ts

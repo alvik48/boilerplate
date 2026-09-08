@@ -1,3 +1,11 @@
+---
+id: repository-templates
+title: 'Templates'
+description: 'Templates for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # Templates
 
 New applications and database packages must be created by copying a template and
@@ -46,7 +54,10 @@ Required adaptations:
 - `package.json` name: `@apps/backend.<name>`.
 - README title and description.
 - `API_PORT` default in `src/main.ts` if the service needs a reserved port.
-- Env examples for `API_PORT`, `API_HOST`, and service-specific variables.
+- Env examples for `API_PORT`, `API_HOST`, `DOCS_ORIGINS`, and service-specific variables.
+- `apiContract.serviceId` in package metadata and `src/api.config.ts` identity/version.
+- A service entry with guide mappings in `apps/frontend.docs/services.ts` and its
+  `package#openapi:check` dependency in the docs generation task in `turbo.json`.
 - Dependencies for shared DB packages, for example
   `"@packages/db-core": "workspace:*"`.
 - Module names, controllers, and health routes if the template defaults are not

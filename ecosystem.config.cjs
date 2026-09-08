@@ -18,6 +18,19 @@
 
 module.exports = {
   apps: [
+    {
+      name: 'frontend_docs',
+      cwd: './apps/frontend.docs/dist/deploy',
+      script: 'apps/frontend.docs/server.js',
+      instances: 1,
+      exec_mode: 'fork',
+      env: { NODE_ENV: 'production', PORT: 3002, HOSTNAME: '127.0.0.1' },
+      max_memory_restart: '500M',
+      kill_timeout: 5000,
+      restart_delay: 1000,
+      time: true,
+      watch: false,
+    },
     // Examples:
     /*{
       name: 'backend_core',

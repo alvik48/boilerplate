@@ -1,3 +1,11 @@
+---
+id: repository-structure
+title: 'Repository Structure'
+description: 'Repository Structure for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # Repository Structure
 
 ## Top-Level Layout
@@ -9,6 +17,7 @@ apps/                     deployable applications
 packages/                 shared libraries, tooling configs, database packages
 templates/                canonical source templates for new apps/packages
 docs/repository/          AI-ready development documentation
+docs/integration/         external client and agent integration guidance
 docs/                     permanent project documentation and guides
 scripts/                  repository automation, currently empty
 ```
@@ -16,6 +25,11 @@ scripts/                  repository automation, currently empty
 `.agents/skills` is versioned, not generated output. `skills-lock.json` records
 upstream source metadata for explicit updates; a clone already includes the skill
 files. See [skills.md](skills.md) for maintenance rules.
+
+`docs/integration/` owns consumer-facing guides; `docs/repository/` owns development
+rules. The Fumadocs app `apps/frontend.docs` publishes API references and the public
+project MCP endpoint from one manifest. See [documentation.md](documentation.md) for content ownership
+and required updates when external contracts change.
 
 `.agents/plans/` is created on demand and holds one Markdown plan per task. Plans
 are local to the checkout and are not transferred by Git to other clones or
@@ -43,6 +57,12 @@ typecheckable.
   `./react-library.json`.
 - `packages/ui` exports shared React UI components, hooks, lib utilities,
   styles, and themes.
+
+- `apps/frontend.docs` owns the documentation Node deployment and HTTP routes.
+- `packages/docs-core` owns content and search without Next.js dependencies.
+- `packages/api-contracts` owns generic OpenAPI helpers and a separate `./nest` export.
+- `packages/mcp` owns SDK server construction and descriptors; it imports no app.
+- `docs/api/` owns the authored API directory; generated references stay in the docs app.
 
 ## Naming Conventions
 

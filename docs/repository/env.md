@@ -1,3 +1,11 @@
+---
+id: repository-env
+title: 'Environment Files'
+description: 'Environment Files for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # Environment Files
 
 ## Policy
@@ -87,3 +95,14 @@ that package's `.env.example`.
   package path, not the expected secret value.
 - When adding a new required env variable, update `.env.example`, package README,
   and any deployment docs in the same change.
+
+## Documentation Variables
+
+`apps/frontend.docs/.env.example` documents `DOCS_ORIGIN`, `DOCS_SOURCE_URL`,
+`DOCS_API_BACKEND_TEMPLATE_URL` and `DOCS_REVISION`. Export them into the build
+process for generation; root docs commands do not automatically load `.env.local`.
+They affect published artifacts and Turbo hashes. Never include credentials in
+public URLs. Runtime Host validation uses the origin baked into the manifest.
+
+The backend's `DOCS_ORIGINS` sets allowed browser origins for direct playground
+requests. It defaults to `http://localhost:3002`. See [deployment](docs-deployment.md).

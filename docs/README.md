@@ -18,9 +18,20 @@ current architecture.
 
 ## Available Documentation
 
-| Need                            | Read                                     |
-| ------------------------------- | ---------------------------------------- |
-| Develop or extend this monorepo | [Repository guide](repository/README.md) |
+| Need                                  | Read                                               |
+| ------------------------------------- | -------------------------------------------------- |
+| Develop or extend this monorepo       | [Repository guide](repository/README.md)           |
+| Integrate an external client or agent | [Integration guide](integration/README.md)         |
+| Add or change an external contract    | [Documentation rules](repository/documentation.md) |
+
+The repository ships a Fumadocs documentation application, generated API references,
+Markdown exports and a public documentation MCP. Integration, API and Repository
+are peer sections. The backend health API remains a local template example.
+
+- [Choose an entry point](getting-started.md).
+- [API directory](api/README.md).
+- [Documentation architecture](architecture.md).
+- [MCP quickstart](integration/mcp/quickstart.md).
 
 ## Documentation Scope
 

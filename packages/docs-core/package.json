@@ -1,0 +1,44 @@
+{
+  "name": "@packages/docs-core",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./build": {
+      "types": "./dist/build.d.ts",
+      "default": "./dist/build.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "format": "prettier --write .",
+    "test": "node --test --test-isolation=none tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@packages/api-contracts": "workspace:*",
+    "gray-matter": "4.0.3",
+    "zod": "4.4.3",
+    "unified": "11.0.5",
+    "remark-parse": "11.0.0",
+    "remark-gfm": "4.0.1",
+    "remark-stringify": "11.0.0",
+    "unist-util-visit": "5.1.0",
+    "mdast-util-to-string": "4.0.0",
+    "github-slugger": "2.0.0"
+  },
+  "devDependencies": {
+    "@packages/eslint-config": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
+    "@types/node": "^25.6.0",
+    "eslint": "^9.39.0",
+    "typescript": "6.0.3",
+    "prettier": "^3.8.4",
+    "@types/mdast": "4.0.4"
+  }
+}
