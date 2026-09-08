@@ -75,3 +75,11 @@ generated/
 
 # Temporary AI implementation plans
 /.agents/plans/
+
+# Fumadocs generated imports and browser artifacts
+.source/
+playwright-report/
+test-results/
+
+# Generated public documentation assets
+/apps/frontend.docs/public/assets/

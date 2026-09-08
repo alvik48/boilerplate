@@ -1,0 +1,55 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+@import 'fumadocs-openapi/css/preset.css';
+@theme {
+  --font-sans: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+.docs-search {
+  margin-bottom: 2rem;
+}
+.docs-search-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem 1rem;
+}
+.docs-search-controls label {
+  font-size: 0.8rem;
+  color: var(--color-fd-muted-foreground);
+}
+.docs-search-controls label[for='docs-scope'] {
+  grid-column: 2;
+  grid-row: 1;
+}
+.docs-search input,
+.docs-search select {
+  border: 1px solid var(--color-fd-border);
+  background: var(--color-fd-card);
+  color: var(--color-fd-foreground);
+  border-radius: 0.5rem;
+  padding: 0.7rem;
+  min-width: 0;
+}
+.docs-search-results {
+  margin-top: 1rem;
+  max-height: 24rem;
+  overflow-y: auto;
+}
+.docs-search-results li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-fd-border);
+}
+.docs-search-results a {
+  font-weight: 600;
+  text-decoration: underline;
+}
+.docs-search-results p {
+  font-size: 0.85rem;
+  color: var(--color-fd-muted-foreground);
+}
+@media (max-width: 520px) {
+  .docs-search-controls {
+    display: flex;
+    flex-direction: column;
+  }
+}

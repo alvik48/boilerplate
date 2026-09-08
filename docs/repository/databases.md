@@ -1,3 +1,11 @@
+---
+id: repository-databases
+title: 'Database Development'
+description: 'Database Development for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # Database Development
 
 Database code belongs in reusable packages under `packages/*`. Apps consume those

@@ -13,7 +13,14 @@
     "skills:list": "pnpm exec skills list",
     "skills:update": "pnpm exec skills update --project",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "openapi:generate": "turbo run openapi:generate",
+    "openapi:check": "turbo run openapi:check",
+    "docs:generate": "turbo run docs:generate",
+    "docs:check": "turbo run docs:check",
+    "docs:build": "turbo run build --filter=@apps/frontend.docs",
+    "docs:dev": "turbo run dev --filter=@apps/frontend.docs",
+    "docs:package": "turbo run docs:package --filter=@apps/frontend.docs"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",

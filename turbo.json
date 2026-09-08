@@ -37,6 +37,197 @@
     "typecheck": {
       "dependsOn": ["^typecheck"],
       "outputs": []
+    },
+    "openapi:generate": {
+      "dependsOn": ["build"],
+      "outputs": ["generated/openapi.json"]
+    },
+    "openapi:check": {
+      "dependsOn": ["openapi:generate"],
+      "outputs": []
+    },
+    "openapi:watch": {
+      "dependsOn": ["openapi:check"],
+      "persistent": true,
+      "cache": false
+    },
+    "docs:generate": {
+      "outputs": ["generated/**", "public/assets/**"]
+    },
+    "@apps/frontend.docs#docs:generate": {
+      "dependsOn": ["^build", "@apps/backend-template#openapi:check"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!next-env.d.ts",
+        "$TURBO_ROOT$/docs/**",
+        "$TURBO_ROOT$/README.md",
+        "$TURBO_ROOT$/turbo.json",
+        "$TURBO_ROOT$/apps/*/package.json",
+        "$TURBO_ROOT$/templates/*/package.json",
+        "$TURBO_ROOT$/packages/*/package.json",
+        "$TURBO_ROOT$/apps/*/schemas/**",
+        "$TURBO_ROOT$/packages/*/schemas/**",
+        "$TURBO_ROOT$/templates/*/schemas/**"
+      ],
+      "env": ["DOCS_ORIGIN", "DOCS_SOURCE_URL", "DOCS_API_BACKEND_TEMPLATE_URL", "DOCS_REVISION"],
+      "outputs": ["generated/**", "public/assets/**"]
+    },
+    "docs:prepare": {
+      "dependsOn": ["docs:generate"],
+      "outputs": [".source/**"],
+      "inputs": ["$TURBO_DEFAULT$", "!next-env.d.ts"]
+    },
+    "docs:check": {
+      "dependsOn": ["docs:prepare"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!next-env.d.ts",
+        "$TURBO_ROOT$/docs/**",
+        "$TURBO_ROOT$/README.md",
+        "$TURBO_ROOT$/turbo.json",
+        "$TURBO_ROOT$/apps/*/package.json",
+        "$TURBO_ROOT$/templates/*/package.json",
+        "$TURBO_ROOT$/packages/*/package.json",
+        "$TURBO_ROOT$/apps/*/schemas/**",
+        "$TURBO_ROOT$/packages/*/schemas/**",
+        "$TURBO_ROOT$/templates/*/schemas/**"
+      ],
+      "env": ["DOCS_ORIGIN", "DOCS_SOURCE_URL", "DOCS_API_BACKEND_TEMPLATE_URL", "DOCS_REVISION"],
+      "outputs": []
+    },
+    "@apps/frontend.docs#build": {
+      "dependsOn": ["^build", "docs:prepare"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!next-env.d.ts",
+        "$TURBO_ROOT$/docs/**",
+        "$TURBO_ROOT$/README.md",
+        "$TURBO_ROOT$/turbo.json",
+        "$TURBO_ROOT$/apps/*/package.json",
+        "$TURBO_ROOT$/templates/*/package.json",
+        "$TURBO_ROOT$/packages/*/package.json",
+        "$TURBO_ROOT$/apps/*/schemas/**",
+        "$TURBO_ROOT$/packages/*/schemas/**",
+        "$TURBO_ROOT$/templates/*/schemas/**"
+      ],
+      "env": ["DOCS_ORIGIN", "DOCS_SOURCE_URL", "DOCS_API_BACKEND_TEMPLATE_URL", "DOCS_REVISION"],
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
+    },
+    "@apps/frontend.docs#typecheck": {
+      "dependsOn": ["^build", "docs:prepare"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!next-env.d.ts",
+        "$TURBO_ROOT$/docs/**",
+        "$TURBO_ROOT$/README.md",
+        "$TURBO_ROOT$/turbo.json",
+        "$TURBO_ROOT$/apps/*/package.json",
+        "$TURBO_ROOT$/templates/*/package.json",
+        "$TURBO_ROOT$/packages/*/package.json",
+        "$TURBO_ROOT$/apps/*/schemas/**",
+        "$TURBO_ROOT$/packages/*/schemas/**",
+        "$TURBO_ROOT$/templates/*/schemas/**"
+      ],
+      "env": ["DOCS_ORIGIN", "DOCS_SOURCE_URL", "DOCS_API_BACKEND_TEMPLATE_URL", "DOCS_REVISION"],
+      "outputs": []
+    },
+    "@apps/frontend.docs#test": {
+      "dependsOn": ["docs:prepare"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!next-env.d.ts",
+        "$TURBO_ROOT$/docs/**",
+        "$TURBO_ROOT$/README.md",
+        "$TURBO_ROOT$/turbo.json",
+        "$TURBO_ROOT$/apps/*/package.json",
+        "$TURBO_ROOT$/templates/*/package.json",
+        "$TURBO_ROOT$/packages/*/package.json",
+        "$TURBO_ROOT$/apps/*/schemas/**",
+        "$TURBO_ROOT$/packages/*/schemas/**",
+        "$TURBO_ROOT$/templates/*/schemas/**"
+      ],
+      "env": ["DOCS_ORIGIN", "DOCS_SOURCE_URL", "DOCS_API_BACKEND_TEMPLATE_URL", "DOCS_REVISION"],
+      "outputs": []
+    },
+    "@apps/frontend.docs#lint": {
+      "dependsOn": ["docs:prepare"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!next-env.d.ts",
+        "$TURBO_ROOT$/docs/**",
+        "$TURBO_ROOT$/README.md",
+        "$TURBO_ROOT$/turbo.json",
+        "$TURBO_ROOT$/apps/*/package.json",
+        "$TURBO_ROOT$/templates/*/package.json",
+        "$TURBO_ROOT$/packages/*/package.json",
+        "$TURBO_ROOT$/apps/*/schemas/**",
+        "$TURBO_ROOT$/packages/*/schemas/**",
+        "$TURBO_ROOT$/templates/*/schemas/**"
+      ],
+      "outputs": []
+    },
+    "@apps/frontend.docs#dev": {
+      "dependsOn": ["docs:prepare"],
+      "with": ["@apps/frontend.docs#docs:watch", "@apps/backend-template#openapi:watch"],
+      "env": ["DOCS_ORIGIN", "DOCS_SOURCE_URL", "DOCS_API_BACKEND_TEMPLATE_URL", "DOCS_REVISION", "DOCS_TEST_FIXTURES"],
+      "persistent": true,
+      "cache": false
+    },
+    "docs:watch": {
+      "dependsOn": ["docs:generate"],
+      "env": ["DOCS_ORIGIN", "DOCS_SOURCE_URL", "DOCS_API_BACKEND_TEMPLATE_URL", "DOCS_REVISION"],
+      "persistent": true,
+      "cache": false
+    },
+    "docs:package": {
+      "dependsOn": ["build"],
+      "outputs": ["dist/deploy/**"],
+      "inputs": ["$TURBO_DEFAULT$", "!next-env.d.ts"]
+    },
+    "@packages/api-contracts#test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/api-contracts#typecheck": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/api-contracts#lint": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/docs-core#test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/docs-core#typecheck": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/docs-core#lint": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/mcp#test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/mcp#typecheck": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/mcp#lint": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@apps/backend-template#test": {
+      "dependsOn": ["openapi:check"],
+      "outputs": []
+    },
+    "test:browser": {
+      "dependsOn": ["docs:prepare"],
+      "cache": false,
+      "outputs": ["test-results/**", "playwright-report/**"]
     }
   }
 }

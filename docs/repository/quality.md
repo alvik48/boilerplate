@@ -1,3 +1,11 @@
+---
+id: repository-quality
+title: 'Quality'
+description: 'Quality for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # Quality
 
 ## Formatting
@@ -112,6 +120,10 @@ A code change is complete when:
 - Affected docs were checked against the final code and config, and any drift
   was fixed in the same change.
 - The change stays inside the correct app/package boundary.
+- External contract or behavior changes include current integration guides,
+  schemas, verified examples, and compatibility/migration guidance under
+  [documentation.md](documentation.md). Verify generated references and MCP content
+  for the same revision.
 - New apps/packages were created from templates.
 - Package names, ports, metadata, README files, and env examples were adapted.
 - Cross-package dependencies are declared with `workspace:*`.
@@ -121,3 +133,19 @@ A code change is complete when:
 - Any skipped verification is explicitly reported with the reason.
 - User-facing frontend changes were checked in a browser when a dev server can
   run.
+
+## Documentation Validation
+
+Run `pnpm docs:check` for content metadata, links/anchors, workspace inventory,
+integration coverage, schema examples, generated artifact parity and reproducibility.
+Declared JSON examples refer to actual fenced guide blocks and validate against
+operation response schemas. Backend tests compare the actual HTTP response and
+runtime JSON to the offline contract; MCP tests cover SDK transport and authorization.
+
+`pnpm --filter @apps/frontend.docs test:browser` exercises navigation, scoped search,
+mobile layout, real health requests, an authenticated body/error fixture, credential
+nonpersistence, and root Markdown hot reload. It needs Playwright Chromium installed.
+The fixture route is development-only and omitted from all public discovery surfaces.
+
+Always review behavioral compatibility and prose accuracy, even when coverage checks
+pass. Run root Markdown formatting explicitly as described in [commands](commands.md).

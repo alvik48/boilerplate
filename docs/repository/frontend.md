@@ -1,3 +1,11 @@
+---
+id: repository-frontend
+title: 'Frontend Development'
+description: 'Frontend Development for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # Frontend Development
 
 Frontend apps are Next.js App Router applications under `apps/frontend.<name>`.
@@ -104,3 +112,17 @@ installed Next.js version through `next-devtools`. The upstream
 
 See [skills.md](skills.md) for the source migration and
 [mcp-servers.md](mcp-servers.md) for Next.js tooling.
+
+## Documentation Application
+
+`apps/frontend.docs` was copied from the frontend template and serves Fumadocs on
+port 3002. Its server routes expose search, Markdown, specs and public MCP using a
+single generated manifest. Integration, API and Repository are peer navigation
+sections selected through the sidebar dropdown, with per-section page lists.
+Root Markdown is normalized into a generated
+collection, and new pages require no route code.
+
+Use `pnpm docs:dev` and `pnpm docs:build` so contract generation and Fumadocs
+preparation run first. The pinned playground's credential persistence is disabled
+through a reviewed pnpm patch. [Deployment](docs-deployment.md) requires Node and
+bundles content; the docs application does not use static export.

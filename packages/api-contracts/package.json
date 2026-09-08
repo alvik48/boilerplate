@@ -1,0 +1,39 @@
+{
+  "name": "@packages/api-contracts",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./nest": {
+      "types": "./dist/nest.d.ts",
+      "default": "./dist/nest.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "format": "prettier --write .",
+    "test": "node --test --test-isolation=none tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "12.1.0",
+    "openapi-types": "12.1.3",
+    "@nestjs/swagger": "11.4.4",
+    "@nestjs/common": "^11.1.19",
+    "@nestjs/core": "11.1.19",
+    "ajv": "8.17.1"
+  },
+  "devDependencies": {
+    "@packages/eslint-config": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
+    "@types/node": "^25.6.0",
+    "eslint": "^9.39.0",
+    "typescript": "6.0.3",
+    "prettier": "^3.8.4"
+  }
+}

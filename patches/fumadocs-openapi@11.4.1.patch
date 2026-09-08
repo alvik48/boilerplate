@@ -1,0 +1,53 @@
+diff --git a/dist/playground/client.d.ts b/dist/playground/client.d.ts
+index 1127d1ceb95684bb96a50fbc02e3944b30f3a821..3c1a9cc63bcad7d9462eefc12969f2ab8b37e84f 100644
+--- a/dist/playground/client.d.ts
++++ b/dist/playground/client.d.ts
+@@ -26,6 +26,8 @@ interface CollapsiblePanelProps extends Omit<ComponentProps<typeof Collapsible>,
+   title: ReactNode;
+ }
+ interface PlaygroundClientOptions {
++  /** Persist authorization in localStorage. Defaults to true for upstream compatibility. */
++  persistAuthorization?: boolean;
+   /**
+    * transform fields for auth-specific parameters (e.g. header)
+    */
+diff --git a/dist/playground/client.js b/dist/playground/client.js
+index ee51580c92d0ec1dbfd0f0a423857fb30dc9cfde..d4566e1f20ffffe346099152c9de79f643231a50 100644
+--- a/dist/playground/client.js
++++ b/dist/playground/client.js
+@@ -338,7 +338,7 @@ function useAuthInputs(engine, requirements) {
+ 	const ctx = useRenderContext();
+ 	const { resolve } = ctx.schema;
+ 	const schemes = ctx.schema.dereferenced.components?.securitySchemes;
+-	const { transformAuthInputs } = ctx.playground ?? {};
++	const { transformAuthInputs, persistAuthorization = true } = ctx.playground ?? {};
+ 	const [requirementId, setRequirementId] = useState(() => {
+ 		if (!schemes || requirements.length === 0) return -1;
+ 		const idx = requirements.findIndex((s) => s.every((item) => !resolve(schemes[item.id]).deprecated));
+@@ -449,7 +449,7 @@ function useAuthInputs(engine, requirements) {
+ 			for (const item of inputs) {
+ 				if (!arrayStartsWith(item.fieldName, key)) continue;
+ 				const value = engine.get(item.fieldName);
+-				if (value != null) localStorage.setItem(item.storageKey, JSON.stringify(value));
++				if (persistAuthorization && value != null) localStorage.setItem(item.storageKey, JSON.stringify(value));
+ 			}
+ 		}
+ 	});
+@@ -464,7 +464,7 @@ function useAuthInputs(engine, requirements) {
+ 		}
+ 		const idx = requirements.findIndex((requirement) => requirement.some((item) => item.id === updatedSchemeId));
+ 		if (idx !== -1) {
+-			localStorage.setItem(storageKeys.AuthField(updatedSchemeId), JSON.stringify(token));
++			if (persistAuthorization) localStorage.setItem(storageKeys.AuthField(updatedSchemeId), JSON.stringify(token));
+ 			setRequirementId(idx);
+ 		}
+ 	});
+@@ -482,7 +482,7 @@ function useAuthInputs(engine, requirements) {
+ 		},
+ 		initAuthInputs() {
+ 			for (const item of inputs) {
+-				const stored = localStorage.getItem(item.storageKey);
++				const stored = persistAuthorization ? localStorage.getItem(item.storageKey) : null;
+ 				if (stored) {
+ 					const parsed = JSON.parse(stored);
+ 					if (typeof parsed === typeof item.defaultValue) {

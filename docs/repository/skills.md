@@ -1,3 +1,11 @@
+---
+id: repository-skills
+title: 'AI-Agent Skills'
+description: 'AI-Agent Skills for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # AI-Agent Skills
 
 Project-local skills are vendored under `.agents/skills` and committed with all

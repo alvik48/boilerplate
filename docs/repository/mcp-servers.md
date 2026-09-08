@@ -1,4 +1,18 @@
+---
+id: repository-mcp-servers
+title: 'MCP Servers'
+description: 'MCP Servers for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # MCP Servers
+
+This page covers repository development tools. The public project MCP serves external
+integrators at `/mcp`; see [consumer guides](../integration/mcp/README.md) and
+[implementation extensions](mcp-extending.md). The optional local consumer endpoint
+is `http://localhost:3002/mcp` after `pnpm docs:dev`; it is not automatically added
+to development tool configuration.
 
 This repository declares recommended MCP servers in `.mcp.json`. MCP tools help
 agents inspect the running app, query component registries, and use IDE-backed

@@ -7,3 +7,6 @@ allowedDeprecatedVersions:
   glob: 7.2.3 || 10.5.0
   inflight: 1.0.6
   node-domexception: 1.0.0
+
+patchedDependencies:
+  fumadocs-openapi@11.4.1: patches/fumadocs-openapi@11.4.1.patch

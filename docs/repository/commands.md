@@ -1,3 +1,11 @@
+---
+id: repository-commands
+title: 'Commands'
+description: 'Commands for contributors working in this monorepo.'
+type: guide
+audience: [developer, agent]
+---
+
 # Commands
 
 Run from the repository root unless noted.
@@ -119,3 +127,24 @@ commit scope, for example:
 feat(frontend.admin): add dashboard shell
 fix(db-core): correct migration index
 ```
+
+## Documentation Commands
+
+```sh
+pnpm openapi:generate
+pnpm openapi:check
+pnpm docs:generate
+pnpm docs:check
+pnpm docs:dev
+pnpm docs:build
+pnpm docs:package
+```
+
+Root commands delegate to Turbo. Backend build precedes OpenAPI generation/check;
+docs generation explicitly depends on each registered backend check. Fumadocs
+preparation precedes docs build/typecheck/tests. See [deployment](docs-deployment.md).
+`docs:dev` starts single-writer companion watchers for root prose and compiled
+backend contracts. The backend API listener is started separately for the playground.
+
+For root Markdown formatting, run `pnpm exec prettier --check README.md 'docs/**/*.md'`;
+package formatting scripts do not cover these root sources.
