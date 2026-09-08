@@ -15,7 +15,7 @@ scripts/                  repository automation, currently empty
 
 `.agents/skills` is versioned, not generated output. `skills-lock.json` records
 upstream source metadata for explicit updates; a clone already includes the skill
-files. See [skills.md](skills.md) for maintenance and license attribution.
+files. See [skills.md](skills.md) for maintenance rules.
 
 `.agents/plans/` is created on demand and holds one Markdown plan per task. Plans
 are local to the checkout and are not transferred by Git to other clones or

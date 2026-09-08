@@ -100,8 +100,8 @@ files from Git, not by reinstalling from upstream. The CLI's
 `experimental_install` refreshes contents and hashes from recorded sources; it
 does not restore an immutable snapshot by `computedHash`.
 
-See [skills.md](skills.md#maintaining-vendored-skills) for adding skills, preserving
-licenses, and handling removed upstream sources.
+See [skills.md](skills.md#maintaining-vendored-skills) for adding skills and
+handling removed upstream sources.
 
 ## Commit Hooks
 

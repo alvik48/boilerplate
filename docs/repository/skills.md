@@ -38,12 +38,8 @@ For additions and updates:
 1. Review the complete skill directory, including references, scripts, assets,
    and any agent metadata. Keep actual files in the repository, not links to
    user-specific directories.
-2. Preserve upstream license and attribution files. Some installers omit licenses
-   from the source repository root; retain those in
-   [skill-licenses](skill-licenses/README.md), outside the hashed skill directories.
-   Check those copies when updating a source.
-3. Commit `.agents/skills` and `skills-lock.json` together, along with any affected
-   license copies and repository documentation. Do not hand-edit the lockfile or
+2. Commit `.agents/skills` and `skills-lock.json` together, along with any affected
+   repository documentation. Do not hand-edit the lockfile or
    reformat the vendored files; root `.prettierignore` excludes them.
 
 If a source disappears, keep using the committed copy. Upstream removal is not
