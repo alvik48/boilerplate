@@ -43,10 +43,15 @@ Run:
 ```sh
 pnpm lint
 pnpm --filter <package> lint
+pnpm lint:fix
+pnpm --filter <package> lint:fix
 ```
 
-Many package lint scripts currently include `--fix`, so lint may modify files.
-Review changes after running lint.
+`lint` never writes. `lint:fix` is the only form that applies autofixes. Every
+package follows this split, so a `lint` exit code means what it says.
+
+Do not add `--fix` back into a `lint` script. ESLint repairs the violation in the
+working copy and exits 0, so CI reports success over source that was never fixed.
 
 Shared ESLint configs live in `packages/eslint-config`:
 

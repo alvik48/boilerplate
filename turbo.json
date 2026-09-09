@@ -16,6 +16,10 @@
     "lint": {
       "outputs": []
     },
+    "lint:fix": {
+      "cache": false,
+      "outputs": []
+    },
     "start": {
       "cache": false,
       "persistent": true
@@ -149,6 +153,11 @@
       "env": ["DOCS_ORIGIN", "DOCS_SOURCE_URL", "DOCS_API_BACKEND_TEMPLATE_URL", "DOCS_REVISION"],
       "outputs": []
     },
+    "@apps/frontend.docs#lint:fix": {
+      "dependsOn": ["docs:prepare"],
+      "cache": false,
+      "outputs": []
+    },
     "@apps/frontend.docs#lint": {
       "dependsOn": ["docs:prepare"],
       "inputs": [
@@ -196,6 +205,11 @@
       "dependsOn": ["build"],
       "outputs": []
     },
+    "@packages/api-contracts#lint:fix": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "outputs": []
+    },
     "@packages/docs-core#test": {
       "dependsOn": ["build"],
       "outputs": []
@@ -208,6 +222,11 @@
       "dependsOn": ["build"],
       "outputs": []
     },
+    "@packages/docs-core#lint:fix": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "outputs": []
+    },
     "@packages/mcp#test": {
       "dependsOn": ["build"],
       "outputs": []
@@ -218,6 +237,11 @@
     },
     "@packages/mcp#lint": {
       "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/mcp#lint:fix": {
+      "dependsOn": ["build"],
+      "cache": false,
       "outputs": []
     },
     "@apps/backend-template#test": {

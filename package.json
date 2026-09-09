@@ -10,6 +10,7 @@
     "dev": "turbo run dev --parallel",
     "format": "turbo run format",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
     "skills:list": "pnpm exec skills list",
     "skills:update": "pnpm exec skills update --project",
     "test": "turbo run test",

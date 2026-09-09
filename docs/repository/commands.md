@@ -25,6 +25,7 @@ pnpm build
 pnpm dev
 pnpm format
 pnpm lint
+pnpm lint:fix
 pnpm test
 pnpm typecheck
 ```
@@ -35,8 +36,18 @@ Root scripts delegate to Turbo:
 - `dev`: `turbo run dev --parallel`
 - `format`: `turbo run format`
 - `lint`: `turbo run lint`
+- `lint:fix`: `turbo run lint:fix`
 - `test`: `turbo run test`
 - `typecheck`: `turbo run typecheck`
+
+### `lint` Versus `lint:fix`
+
+`lint` is check-only in every package. `lint:fix` is the writing form. Keep them
+separate: a `lint` script that carries `--fix` repairs an auto-fixable violation
+in the runner's working copy and then exits 0, which turns a CI failure into a
+green build over unfixed source.
+
+Use `lint:fix` while developing and `lint` anywhere the exit code is the answer.
 
 ## Filtered Commands
 
