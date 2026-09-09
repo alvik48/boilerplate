@@ -105,14 +105,19 @@ pnpm skills:list
 pnpm skills:update
 ```
 
-`skills:list` lists local skills. `skills:update` runs `skills update --project`
-and downloads upstream versions only for this project's skills. Run it explicitly
-as a dedicated maintenance change, then review and commit `.agents/skills` and
+`skills:list` lists local skills. `skills:update` runs `bin/update-skills.sh`,
+which downloads upstream versions for this project's skills and then re-applies
+every correction under `patches/skills/`. Run it explicitly as a dedicated
+maintenance change, then review and commit `.agents/skills`, any patches, and
 `skills-lock.json` together. To update one skill:
 
 ```sh
 pnpm skills:update shadcn
 ```
+
+A patch that no longer applies fails the whole command instead of being silently
+dropped. Re-derive it with `bin/edit-skill.sh`; see
+[skills.md](skills.md#correcting-a-vendored-skill).
 
 There is no `skills:install` bootstrap step. Recover accidentally deleted skill
 files from Git, not by reinstalling from upstream. The CLI's

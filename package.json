@@ -12,7 +12,7 @@
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "skills:list": "pnpm exec skills list",
-    "skills:update": "pnpm exec skills update --project",
+    "skills:update": "bin/update-skills.sh",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "openapi:generate": "turbo run openapi:generate",

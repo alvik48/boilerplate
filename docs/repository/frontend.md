@@ -48,9 +48,13 @@ The package currently exports:
 
 - `./styles.css` and `./globals.css`.
 - `./components/*`.
-- `./hooks/*`.
 - `./lib/*`.
 - `./themes/*`.
+
+There is deliberately no `./hooks/*` export. Add one together with the first
+hook that two apps actually import, not before — an export subpath pointing at a
+directory that does not exist is a broken contract, and inventing a hook to
+justify the subpath is a speculative abstraction.
 
 Rules:
 

@@ -8,6 +8,19 @@ audience: [developer, agent]
 
 # Development Rules
 
+## Precedence
+
+When two sources disagree, follow them in this order:
+
+**repository docs > package config > vendored skill examples**
+
+Repository documents state this project's decisions. Package config encodes them
+mechanically. Vendored skills are third-party domain guidance, written without
+knowledge of this repository, and their examples are the least authoritative
+thing in the tree. A skill example that contradicts a repository rule is a defect
+in the skill — correct it through `patches/skills/`, per
+[skills.md](skills.md#correcting-a-vendored-skill).
+
 ## Core Rules
 
 - Read the root [README.md](../../README.md) first.

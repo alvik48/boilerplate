@@ -50,6 +50,75 @@ For additions and updates:
    repository documentation. Do not hand-edit the lockfile or
    reformat the vendored files; root `.prettierignore` excludes them.
 
+## Correcting A Vendored Skill
+
+Upstream skills sometimes teach something this repository forbids. Do not
+hand-edit the vendored file: `pnpm skills:update` overwrites it, and the only
+thing standing between you and a silently reverted correction is a human noticing
+a missing edit inside a large upstream diff. That will not happen.
+
+Correct it through `patches/skills/<skill>.patch` instead. A patch that stops
+applying is a loud failure that forces someone to look, and — unlike a repository
+document — a patch can also fix the `description` frontmatter, which is what
+decides _when a skill loads at all_.
+
+**Mechanism.** Skills are committed to Git, so their checked-in state is already
+_upstream + patch_ and a fresh clone needs no bootstrap. Patches are re-applied
+on **update**, the one operation that overwrites them:
+
+```sh
+pnpm skills:update            # update all, then re-apply every patch
+pnpm skills:update shadcn     # update one, then re-apply every patch
+```
+
+`skills:update` runs `bin/update-skills.sh`, which forwards its arguments to the
+CLI and then runs `bin/apply-skill-patches.sh`. Per patch, that script reverses
+cleanly (already applied, skip), applies cleanly (apply), or **fails the whole
+command** naming the skill. Do not chain these with `&&` in the `package.json`
+script field: pnpm appends user arguments to the end of the whole command string,
+so `pnpm skills:update shadcn` would update every skill and pass `shadcn` to the
+patch script.
+
+**Authoring or re-deriving a correction.** The baseline must be a pristine
+upstream copy, never the index — after the first patch lands, the index already
+holds the corrected skill, so diffing against it produces corrected-vs-corrected
+and degrades a little more on every update. `bin/edit-skill.sh` handles this:
+
+```sh
+bin/edit-skill.sh begin <skill>             # baseline from the current vendored copy
+bin/edit-skill.sh begin <skill> --refresh   # pull new upstream first, patching disabled
+# ... make the correction in the printed 'b' directory only ...
+bin/edit-skill.sh finish <skill> <workdir>
+```
+
+`--refresh` calls the updater with patching disabled on purpose. Using the normal
+wrapper would re-apply the old patch whenever upstream did not touch the patched
+region, making the snapshot _upstream + old patch_ — the exact contamination this
+workflow exists to prevent.
+
+Then commit the patched skill files, the patch, and `skills-lock.json` together.
+Patching does not invalidate `skills-lock.json`: `computedHash` comes from the
+source snapshot service rather than the installed directory.
+
+**Limits.** Keep hunks minimal and tightly anchored; Markdown prose patches break
+on any nearby rewording, so prefer deleting or replacing a wrong example over
+rewriting a section. If a patch grows past ~2 hunks, stop patching and fork the
+skill: drop it from `skills-lock.json` and own it as a project skill. An
+ever-growing patch means the upstream skill no longer matches this repository.
+If a new upstream renames or deletes a file a patch touches, stop and re-derive
+the correction; do not resurrect the old file.
+
+**Current patches.**
+
+| Patch                                        | Corrects                                                                                                                                                                                                                                                                                                                 |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `patches/skills/nestjs-best-practices.patch` | `rules/arch-single-responsibility.md` taught orchestration in the controller ("Orchestration in controller or dedicated orchestrator", with a handler calling create-order → charge → notify). Replaced with a `CreateOrderUseCase` holding the sequence and a controller making one call, per [backend.md](backend.md). |
+| `patches/skills/node.patch`                  | `SKILL.md` prescribed type stripping for Node TypeScript generally, in both the body and the activation `description`. Scoped to standalone scripts and tooling: NestJS compiles with `nest build` because `emitDecoratorMetadata` needs a transform that type stripping does not perform.                               |
+
+A patch is only the third layer of a correction. The positive rule in the
+repository document and the ESLint rule that blocks the violation both stay — a
+skill can be corrected and still never load, and only lint blocks.
+
 If a source disappears, keep using the committed copy. Upstream removal is not
 itself a reason to delete a project skill; removal or replacement is a separate
 maintenance decision. Recover accidentally deleted local files from Git. For
@@ -119,10 +188,11 @@ and the configured `next-devtools` MCP. See [frontend.md](frontend.md) and
 - Read the selected skill's `SKILL.md` before acting.
 - If a skill points to a specific reference file for the task, read that
   reference file too.
-- Prefer repository docs and package configs for local conventions; use skills
-  for domain-specific best practices.
+- Precedence is **repository docs > package config > vendored skill examples**.
+  See [development-rules.md](development-rules.md#precedence).
 - If a local skill conflicts with a concrete repository convention, follow the
-  repository convention and document the mismatch when it matters.
+  repository convention, then fix the skill through `patches/skills/` so the next
+  agent does not hit the same conflict.
 - Do not edit `.agents/skills` as part of normal product development.
 - Treat changes to vendored skills as explicit maintenance and review their full
   diff, including supporting files.
