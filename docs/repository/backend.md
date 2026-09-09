@@ -86,6 +86,11 @@ async create(@CurrentUser() user: User, @Body() dto: CreateOrderDto) {
 }
 ```
 
+`@packages/eslint-config` enforces this with a local rule. It is a detector for
+known shapes, not a guarantee — see
+[quality.md](quality.md#the-thin-controller-rule) for its exact scope and its
+documented blind spot.
+
 **Moving code out of the controller is not sufficient.** Dependency direction
 matters too: domain code must be testable without HTTP and without a database. A
 service that imports `@nestjs/common` for anything beyond `@Injectable` and its
@@ -133,7 +138,10 @@ class or token. Precisely:
   provider is private even though its file is reachable on disk.
 - If you want a file-level public surface, make it explicit: `<feature>/index.ts`
   re-exporting the module plus the public service classes, tokens, and types —
-  named re-exports, never `export *`.
+  named re-exports, never `export *`. That boundary is enforced by
+  dependency-cruiser, which can compare importer and target paths;
+  `no-restricted-imports` cannot. See
+  [quality.md](quality.md#dependency-graph-checks).
 
 Reference: [NestJS shared modules](https://docs.nestjs.com/modules#shared-modules).
 

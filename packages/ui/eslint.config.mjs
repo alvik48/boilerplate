@@ -5,11 +5,15 @@ export default [
   ...reactLibraryConfig(import.meta.dirname),
   {
     // Registry code is vendored from shadcn and refreshed through its CLI, so it
-    // keeps the upstream `function Component() {}` shape. Enforcing func-style
-    // here would conflict with every `shadcn add` update.
+    // keeps the upstream `function Component() {}` shape and its own file sizes.
+    // Enforcing our style or size signals here would conflict with every
+    // `shadcn add` update.
     files: ['src/components/**/*.tsx', 'src/lib/utils.ts'],
     rules: {
       'func-style': 'off',
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
+      complexity: 'off',
     },
   },
 ];

@@ -26,8 +26,9 @@ Split a file when any of these holds:
 
 Line count is a **signal, not a standard**. The soft thresholds are 300 lines per
 file and roughly 60 lines per function, and ESLint reports both as warnings
-rather than errors precisely so they stay signals. A file over the threshold with
-one reason to change is fine. A 90-line file doing three unrelated things is not.
+rather than errors precisely so they stay signals — see
+[quality.md](quality.md#complexity-signals). A file over the threshold with one
+reason to change is fine. A 90-line file doing three unrelated things is not.
 
 Do not split a file to satisfy a counter. Splitting on line count alone produces
 fragments that must be read together, which is worse than the long file.

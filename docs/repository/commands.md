@@ -28,6 +28,7 @@ pnpm lint
 pnpm lint:fix
 pnpm test
 pnpm typecheck
+pnpm deps:check
 ```
 
 Root scripts delegate to Turbo:
@@ -39,6 +40,11 @@ Root scripts delegate to Turbo:
 - `lint:fix`: `turbo run lint:fix`
 - `test`: `turbo run test`
 - `typecheck`: `turbo run typecheck`
+
+`deps:check` runs dependency-cruiser directly rather than through Turbo: it
+cruises the whole graph from the root in one pass, so a per-package task would
+have nothing to run. See
+[quality.md](quality.md#dependency-graph-checks).
 
 ### `lint` Versus `lint:fix`
 

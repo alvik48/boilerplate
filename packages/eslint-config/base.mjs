@@ -6,9 +6,22 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+import { RESTRICTED_IMPORTS_BASE } from './rules/boundaries.mjs';
+
 // Statements that must be surrounded by blank lines. `block-like` covers braced
 // bodies; the explicit keywords also catch brace-less one-liners.
 const BLOCK_STATEMENTS = ['block-like', 'if', 'for', 'while', 'do', 'switch', 'try'];
+
+// Complexity SIGNALS, deliberately warnings rather than errors. Line count is a
+// signal, not a standard: as errors these would reward splitting files to
+// satisfy a counter, which produces fragments that must be read together.
+// See docs/repository/code-design.md, "Decomposition Criteria".
+const COMPLEXITY_SIGNALS = {
+  'max-lines': ['warn', { max: 300, skipBlankLines: true, skipComments: true }],
+  'max-lines-per-function': ['warn', { max: 60, skipBlankLines: true, skipComments: true }],
+  'max-depth': ['warn', 4],
+  complexity: ['warn', 12],
+};
 
 export function baseConfig(tsconfigRootDir) {
   return tseslint.config(
@@ -20,6 +33,10 @@ export function baseConfig(tsconfigRootDir) {
         'coverage/**',
         'generated/**',
         'src/generated/**',
+        // Guardrail fixtures contain deliberate violations; the fixture suite
+        // asserts against them directly. Linting them repo-wide would fail by
+        // design.
+        'fixtures/**',
       ],
     },
     eslint.configs.recommended,
@@ -41,6 +58,8 @@ export function baseConfig(tsconfigRootDir) {
         'simple-import-sort': simpleImportSort,
       },
       rules: {
+        ...COMPLEXITY_SIGNALS,
+        'no-restricted-imports': ['error', RESTRICTED_IMPORTS_BASE],
         'prettier/prettier': ['error', { endOfLine: 'auto' }],
         curly: ['error', 'all'],
         'func-style': ['error', 'expression', { allowArrowFunctions: true }],
@@ -77,6 +96,15 @@ export function baseConfig(tsconfigRootDir) {
           { blankLine: 'always', prev: '*', next: BLOCK_STATEMENTS },
           { blankLine: 'always', prev: BLOCK_STATEMENTS, next: '*' },
         ],
+      },
+    },
+    {
+      // Tests are long by nature: setup, many cases, and assertions that read
+      // better inline than extracted. The size signals say nothing useful here.
+      files: ['**/*.spec.{ts,tsx}', '**/*.test.{ts,tsx,mjs}', '**/tests/**', '**/test/**'],
+      rules: {
+        'max-lines': 'off',
+        'max-lines-per-function': 'off',
       },
     },
   );

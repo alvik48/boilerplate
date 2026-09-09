@@ -92,6 +92,138 @@ shape; see [frontend.md](frontend.md#shadcn-and-styling).
 Blank-line and import-order violations are autofixable. `func-style` is not,
 because converting a declaration to an expression changes hoisting.
 
+### Complexity Signals
+
+`base` reports four size and complexity measures as **warnings**, never errors:
+
+| Rule                     | Threshold                               |
+| ------------------------ | --------------------------------------- |
+| `max-lines`              | 300 (blank lines and comments excluded) |
+| `max-lines-per-function` | 60                                      |
+| `max-depth`              | 4                                       |
+| `complexity`             | 12                                      |
+
+They are warnings on purpose. As errors they would reward splitting a file to
+satisfy a counter, which produces fragments that must be read together — worse
+than the long file. Treat a warning as a prompt to apply the decomposition
+criteria in [code-design.md](code-design.md#decomposition-criteria), not as a
+defect to silence.
+
+Disabled for tests, and for `packages/ui/src/components/**` where the code is
+vendored from the shadcn registry.
+
+### Architecture Boundaries
+
+Enforcement is split by what each tool can actually decide.
+
+**`no-restricted-imports`** handles flat prohibitions on the import specifier
+alone: relative escapes out of a package at any depth, deep imports into another
+package's `src/**`, framework and ORM imports inside `domain/`, and Prisma
+outside the data layer. Note that its `patterns` use gitignore syntax, not
+minimatch — `!(index)` is inert there, and a pattern like `../../packages/**` is
+anchored to exactly two levels.
+
+**`architecture/thin-controller`** is a local rule in `@packages/eslint-config`.
+See [The Thin-Controller Rule](#the-thin-controller-rule).
+
+**dependency-cruiser** carries everything needing importer↔target correlation or
+module resolution. See [Dependency Graph Checks](#dependency-graph-checks).
+
+#### The Thin-Controller Rule
+
+Enforces the orchestration rule from
+[backend.md](backend.md#the-orchestration-rule). `max-statements` and
+`max-lines-per-function` do **not** enforce it: a handler with three sequential
+collaborator calls and a return is four statements in well under twenty lines.
+
+Scope:
+
+- Only methods carrying a route decorator on an `@Controller` class. Helper
+  methods are a legitimate way to keep a handler readable.
+- Injected dependencies whose names match `logger|metrics|config|tracer|clock`
+  are cross-cutting and do not count. Configurable via `ignoredDependencies`.
+- Flags: two or more collaborator call sites; a collaborator call inside a loop
+  or callback; aliasing a collaborator into a local.
+- Two mutually exclusive branches calling different collaborators are flagged
+  **deliberately**, with their own message. Only one branch runs, so it is not
+  "two operations" — but choosing a collaborator by request content is business
+  branching, which a controller must not do.
+
+**Known blind spot:** a private controller method that itself calls three
+services. Catching that needs cross-method analysis, which the rule does not
+attempt. It is a detector for known shapes, not a guarantee; review owns the
+rest. If it ever proves noisy in practice, drop it rather than weakening it to a
+warning — a rule that fires on legitimate code trains agents to add disable
+comments, which is worse than no rule.
+
+### Guardrail Fixtures
+
+`packages/eslint-config/fixtures/` holds committed examples asserted in both
+directions by `pnpm --filter @packages/eslint-config test`:
+
+- `invalid/` — each file must report its expected rule and message id.
+- `valid/` — each file must be completely clean.
+
+`valid/` matters more. False positives are the failure mode that gets rules
+disabled. The suite runs through ESLint's `Linter` API with type-aware rules
+excluded, so the fixtures need no tsconfig or generated artifacts. The fixtures
+are excluded from repo-wide lint and from dependency-cruiser, because they carry
+deliberate violations.
+
+### Exceptions Policy
+
+A narrow, file- or line-scoped `eslint-disable` with a comment naming the reason
+is acceptable.
+
+Widening or removing a rule in the shared config to make CI green is **not** —
+that silently drops the guarantee for every package in the repository.
+
+### Dependency Graph Checks
+
+```sh
+pnpm deps:check
+```
+
+Runs dependency-cruiser over `apps packages templates` against
+`.dependency-cruiser.cjs`. It carries the rules ESLint provably cannot express,
+because `no-restricted-imports` sees only the import string and never the
+importing file's location:
+
+| Rule                             | Severity | Catches                                                                                                             |
+| -------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| `no-circular`                    | error    | Import cycles                                                                                                       |
+| `not-to-dev-dep`                 | error    | Runtime code importing a devDependency                                                                              |
+| `no-orphans`                     | warn     | Modules nothing imports (package export entries excluded)                                                           |
+| `domain-stays-pure`              | error    | `domain/` reaching NestJS, Prisma or `data/`, **including transitively**                                            |
+| `shared-must-not-reach-features` | error    | `src/shared` depending on `src/features`                                                                            |
+| `feature-entry-points-only`      | error    | Importing another feature's internals rather than its `index.ts` / `server.ts`                                      |
+| `no-sibling-package-escape`      | error    | `../../ui/src/lib/utils` — a sibling-package escape with no `packages/` segment, which defeats every string pattern |
+
+It runs against **resolved** paths, so aliases and re-export chains are followed
+rather than string-matched.
+
+### Cache Invalidation
+
+A shared-config change must re-run the dependent checks, or the guardrails go
+stale without anyone noticing. This is not automatic: `lint` and `typecheck`
+declare explicit `inputs` pointing at `packages/eslint-config` and
+`packages/typescript-config` respectively.
+
+Without them, packages whose `lint` does not depend on a `build` task —
+`@packages/ui`, both app templates, the DB template — stayed cache HITs after a
+`base.mjs` edit and silently skipped the new rules. Verify after changing task
+wiring:
+
+```sh
+pnpm lint                                    # warm the cache
+# edit packages/eslint-config/base.mjs
+pnpm exec turbo run lint --dry=json          # every lint task must show MISS
+```
+
+Note that a package-specific task entry such as `@apps/frontend.docs#lint`
+**replaces** the generic entry rather than merging with it, so its `inputs` must
+repeat the shared-config paths.
+
 ## Typechecking
 
 Run:
@@ -181,7 +313,8 @@ A code change is complete when:
 - Cross-package dependencies are declared with `workspace:*`.
 - Generated files were regenerated, not hand-edited.
 - `.env` files and secrets were not committed.
-- Relevant format, lint, typecheck, build, and test commands passed.
+- Relevant format, lint, typecheck, build, test, and `pnpm deps:check` commands
+  passed.
 - Any skipped verification is explicitly reported with the reason.
 - User-facing frontend changes were checked in a browser when a dev server can
   run.

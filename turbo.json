@@ -14,7 +14,13 @@
       "outputs": []
     },
     "lint": {
-      "outputs": []
+      "outputs": [],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/eslint-config/*.mjs",
+        "$TURBO_ROOT$/packages/eslint-config/rules/**",
+        "$TURBO_ROOT$/packages/eslint-config/package.json"
+      ]
     },
     "lint:fix": {
       "cache": false,
@@ -40,7 +46,8 @@
     },
     "typecheck": {
       "dependsOn": ["^typecheck"],
-      "outputs": []
+      "outputs": [],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/typescript-config/*.json"]
     },
     "openapi:generate": {
       "dependsOn": ["build"],
@@ -122,6 +129,7 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "!next-env.d.ts",
+        "$TURBO_ROOT$/packages/typescript-config/*.json",
         "$TURBO_ROOT$/docs/**",
         "$TURBO_ROOT$/README.md",
         "$TURBO_ROOT$/turbo.json",
@@ -163,6 +171,9 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "!next-env.d.ts",
+        "$TURBO_ROOT$/packages/eslint-config/*.mjs",
+        "$TURBO_ROOT$/packages/eslint-config/rules/**",
+        "$TURBO_ROOT$/packages/eslint-config/package.json",
         "$TURBO_ROOT$/docs/**",
         "$TURBO_ROOT$/README.md",
         "$TURBO_ROOT$/turbo.json",

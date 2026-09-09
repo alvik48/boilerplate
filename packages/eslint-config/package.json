@@ -8,7 +8,14 @@
     "./base": "./base.mjs",
     "./backend": "./backend.mjs",
     "./next": "./next.mjs",
-    "./react-library": "./react-library.mjs"
+    "./react-library": "./react-library.mjs",
+    "./rules/boundaries": "./rules/boundaries.mjs",
+    "./rules/thin-controller": "./rules/thin-controller.mjs"
+  },
+  "scripts": {
+    "lint": "eslint base.mjs backend.mjs next.mjs react-library.mjs rules tests",
+    "lint:fix": "eslint base.mjs backend.mjs next.mjs react-library.mjs rules tests --fix",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@eslint/js": "^10.0.1",
@@ -20,6 +27,10 @@
     "eslint-plugin-simple-import-sort": "^14.0.0",
     "globals": "^17.12.0",
     "typescript-eslint": "^8.70.0"
+  },
+  "devDependencies": {
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "eslint": ">=9"
