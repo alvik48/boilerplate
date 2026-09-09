@@ -103,6 +103,21 @@ pnpm --filter <package> typecheck
 
 Shared TypeScript configs live in `packages/typescript-config`.
 
+All four shared configs set `strict: true`. `nest.json` was the lone outlier —
+it enabled only `strictNullChecks` and explicitly disabled `noImplicitAny` and
+`strictBindCallApply` — and is now aligned. Measured cost at the time of the
+change: zero errors across the backend template.
+
+`@packages/eslint-config/backend` correspondingly no longer disables
+`no-explicit-any` or the `no-unsafe-*` rules, and `no-floating-promises` is an
+error rather than a warning. In practice the lint rules matter more than the
+tsconfig here: an unawaited promise in a service loses its error and its stack
+trace.
+
+When class fields assigned by the framework start tripping
+`strictPropertyInitialization`, use definite assignment (`declare` or `!`) on the
+individual field. Do not relax the shared config.
+
 ## Tests
 
 Run:

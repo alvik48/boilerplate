@@ -14,14 +14,15 @@ export function backendConfig(tsconfigRootDir) {
         },
         sourceType: 'commonjs',
       },
-      rules: {
-        '@typescript-eslint/no-unsafe-assignment': 'off',
-        '@typescript-eslint/no-unsafe-call': 'off',
-        '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/no-floating-promises': 'warn',
-        '@typescript-eslint/no-unsafe-argument': 'warn',
-        '@typescript-eslint/no-unsafe-member-access': 'off',
-      },
+      // The backend used to switch off `no-explicit-any` and three `no-unsafe-*`
+      // rules and downgrade `no-floating-promises` to a warning. That mattered
+      // more than the tsconfig in practice: the linter stayed silent on a
+      // hand-written `any`, and an unawaited promise in a service — a lost error
+      // with no stack trace — only warned.
+      //
+      // Where a Nest idiom genuinely needs an escape, add a file-scoped override
+      // with a comment naming the reason. Never widen the shared config.
+      rules: {},
     },
   ];
 }
