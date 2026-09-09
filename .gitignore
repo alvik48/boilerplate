@@ -10,6 +10,11 @@ out/
 .turbo/
 *.tsbuildinfo
 
+# Next.js writes this on every dev/build run and points it at a different routes
+# reference for each, so tracking it produces churn. Any next dev, next build, or
+# next typegen regenerates it.
+next-env.d.ts
+
 # Test coverage
 coverage/
 /.nyc_output/
