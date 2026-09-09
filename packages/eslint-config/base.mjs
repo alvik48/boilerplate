@@ -67,6 +67,10 @@ export function baseConfig(tsconfigRootDir) {
           { blankLine: 'always', prev: ['const', 'let'], next: '*' },
           { blankLine: 'any', prev: ['const', 'let'], next: ['const', 'let'] },
           { blankLine: 'always', prev: '*', next: ['case', 'default'] },
+          // Separate the import block from the body. Listed last so it wins for
+          // import pairs; `any` keeps simple-import-sort's own grouping intact.
+          { blankLine: 'always', prev: 'import', next: '*' },
+          { blankLine: 'any', prev: 'import', next: 'import' },
         ],
       },
     },

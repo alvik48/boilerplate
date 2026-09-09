@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { fixtureSpec } from '../../../../../tests/fixtures/openapi';
 import { APIPage } from '../../../../components/api-page';
 import { bundleForRenderer } from '../../../../lib/openapi';
+
 export const dynamic = 'force-dynamic';
 
 export default async function Fixture() {

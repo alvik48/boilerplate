@@ -66,8 +66,9 @@ choose a function form, so `base` enforces those separately:
   re-exports.
 - `@stylistic/padding-line-between-statements` requires a blank line around
   `if`, `for`, `while`, `do`, `switch`, `try`, and any braced body, before
-  `return`, and above every `case` except the first. Consecutive `const` and
-  `let` declarations may stay adjacent.
+  `return`, above every `case` except the first, and after the import block.
+  Consecutive `const` and `let` declarations may stay adjacent, as may
+  consecutive imports, so the sorter keeps control of import grouping.
 - `curly` requires braces on every control statement, which also makes
   brace-less one-liners subject to the blank-line rule.
 - `func-style` requires function expressions, so use

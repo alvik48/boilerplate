@@ -1,6 +1,7 @@
 import { createMcpHandler } from '@packages/mcp';
 
 import { manifest, provider } from '../../lib/content';
+
 export const runtime = 'nodejs';
 const handler = createMcpHandler({ provider }, manifest.origin);
 

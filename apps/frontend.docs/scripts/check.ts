@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { stableJson } from '@packages/api-contracts';
 
 import { generate } from './generate.js';
+
 const first = await generate();
 
 assert.deepEqual(first, await generate(), 'Generation must be deterministic');
