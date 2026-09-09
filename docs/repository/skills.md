@@ -141,10 +141,11 @@ the correction; do not resurrect the old file.
 
 **Current patches.**
 
-| Patch                                        | Corrects                                                                                                                                                                                                                                                                                                                                        |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patches/skills/nestjs-best-practices.patch` | `rules/arch-single-responsibility.md` taught orchestration in the controller ("Orchestration in controller or dedicated orchestrator", with a handler calling create-order → charge → notify). Replaced with a `CreateOrderUseCase` holding the sequence and a controller making one call, per [backend.md](backend.md#the-orchestration-rule). |
-| `patches/skills/node.patch`                  | `SKILL.md` prescribed type stripping for Node TypeScript generally, in both the body and the activation `description`. Scoped to standalone scripts and tooling: NestJS compiles with `nest build` because `emitDecoratorMetadata` needs a transform that type stripping does not perform.                                                      |
+| Patch                                              | Corrects                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `patches/skills/nestjs-best-practices.patch`       | `rules/arch-single-responsibility.md` taught orchestration in the controller ("Orchestration in controller or dedicated orchestrator", with a handler calling create-order → charge → notify). Replaced with a `CreateOrderUseCase` holding the sequence and a controller making one call, per [backend.md](backend.md#the-orchestration-rule).  |
+| `patches/skills/node.patch`                        | `SKILL.md` prescribed type stripping for Node TypeScript generally, in both the body and the activation `description`. Scoped to standalone scripts and tooling: NestJS compiles with `nest build` because `emitDecoratorMetadata` needs a transform that type stripping does not perform.                                                       |
+| `patches/skills/vercel-react-best-practices.patch` | `SKILL.md` presented all eight rule categories as unconditional. Gated categories 5-8 on a measurement and pointed at [code-design.md](code-design.md#performance), whose explicit non-rules — no blanket ban on `map`/`filter`/`reduce`, no blanket memoization — contradict `js-combine-iterations`, `js-flatmap-filter`, and `rerender-memo`. |
 
 A patch is only the third layer of a correction. The positive rule in the
 repository document and the ESLint rule that blocks the violation both stay — a
@@ -191,6 +192,8 @@ and the configured `next-devtools` MCP. See [frontend.md](frontend.md) and
 | `next-cache-components-optimizer`      | Cache boundaries, `use cache`, `cacheLife`, `cacheTag`, and prerendering optimization.           |
 | `frontend-design`                      | New UI, redesigns, visual direction, typography, layout quality.                                 |
 | `shadcn`                               | shadcn components, registries, forms, icons, composition, shared UI work.                        |
+| `vercel-react-best-practices`          | React/Next.js performance: request waterfalls, bundle size, server and client fetching.          |
+| `vercel-composition-patterns`          | Component API shape: boolean-prop sprawl, compound components, React 19 `use()`.                 |
 | `prisma-cli`                           | Prisma generate, migrate, deploy, reset, format, validate, studio, debug.                        |
 | `prisma-client-api`                    | Prisma queries, filters, relations, transactions, raw SQL, client methods.                       |
 | `prisma-database-setup`                | Provider setup, connection strings, driver adapters, database troubleshooting.                   |
@@ -201,6 +204,24 @@ and the configured `next-devtools` MCP. See [frontend.md](frontend.md) and
 | `skill-optimizer`                      | Improving skills themselves, activation rules, benchmark loops, regression triage.               |
 | `project-feature-workflow`             | Project-owned. Adding or changing a feature: owner, layer, implementation, verification, review. |
 
+Both Vercel skills are scoped narrower here than they are upstream.
+
+`vercel-react-best-practices` splits in two. Its structural categories (`async-`,
+`bundle-`, `server-`, `client-`) remove round trips and shipped bytes, and apply
+by default. Its micro-optimization categories (`rerender-`, `rendering-`, `js-`,
+`advanced-`) are gated on a measurement by the patch below, because
+[code-design.md](code-design.md#performance) rules out blanket memoization and
+blanket rewriting of `map`/`filter`/`reduce`. Its `bundle-barrel-imports` rule is
+about third-party packages with thousands of re-exports — it is **not** a reason
+to bypass a feature's `index.ts`, which
+[structure.md](structure.md) requires and `deps:check` enforces.
+
+`vercel-composition-patterns` applies at real complexity. A component with two
+props does not need a provider or a compound API; reach for them when boolean
+props are already multiplying. Where it lifts state into a provider, the
+[state ownership table](frontend.md#state-ownership) still decides the owner —
+filters and pagination belong in the URL, not in a context.
+
 ## Task-Based Selection
 
 - Any feature work, backend or frontend: `project-feature-workflow` first, then
@@ -209,7 +230,10 @@ and the configured `next-devtools` MCP. See [frontend.md](frontend.md) and
 - New backend service: `turborepo`, `nestjs-best-practices`, `node`.
 - Backend with DB: add `prisma-client-api` and `prisma-cli`.
 - New frontend app: `turborepo`, `frontend-design`, and version-matched Next.js docs.
-- Shared UI component: `shadcn`, `frontend-design`, `typescript-magician`.
+- Shared UI component: `shadcn`, `frontend-design`, `typescript-magician`, and
+  `vercel-composition-patterns` when the component's prop surface is growing.
+- Frontend performance task: `vercel-react-best-practices`. Take the measurement
+  first; its low-priority categories are gated on one.
 - Next.js cache adoption: `next-cache-components-adoption`.
 - Next.js cache/performance task: `next-cache-components-optimizer`.
 - DB package or migration: `prisma-cli`, `prisma-client-api`,
