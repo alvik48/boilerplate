@@ -37,7 +37,9 @@ export const createMcpHandler = (options: ServerOptions, origin: string, budget 
       sessionIdGenerator: undefined,
       enableJsonResponse: true,
     });
+
     let rejectAbort: (reason: unknown) => void = () => {};
+
     const aborted = new Promise<never>((_resolve, reject) => {
       rejectAbort = reject;
     });

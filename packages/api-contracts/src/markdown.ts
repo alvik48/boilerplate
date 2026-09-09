@@ -18,6 +18,7 @@ export const renderOperation = (spec: OpenAPIV3.Document, operationId: string) =
     servers: operation.servers ?? spec.paths[path]?.servers ?? spec.servers ?? [],
   };
   const schemas: Record<string, unknown> = {};
+
   const visit = (value: unknown): void => {
     if (!value || typeof value !== 'object') {
       return;

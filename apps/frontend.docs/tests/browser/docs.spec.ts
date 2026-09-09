@@ -77,6 +77,7 @@ test('root Markdown additions, edits, renames and deletion refresh site, exports
   const moved = path.resolve('../../docs/integration/browser-verification-moved.md');
   const content = (text: string) =>
     `---\nid: browser-verification\ntitle: Browser verification\ndescription: Hot reload verification\ntype: guide\naudience: [integrator, agent]\n---\n\n# Browser verification\n\n${text}\n`;
+
   const readMcp = async () => {
     const response = await request.post('/mcp', {
       headers: { Accept: 'application/json, text/event-stream', 'MCP-Protocol-Version': '2025-11-25' },

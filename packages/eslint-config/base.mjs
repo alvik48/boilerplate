@@ -59,18 +59,23 @@ export function baseConfig(tsconfigRootDir) {
           },
         ],
         'simple-import-sort/exports': 'error',
+        // The last matching entry wins, so the `any` exemptions sit above the
+        // block rules. That lets runs of plain imports or exports stay packed
+        // while a braced one is still separated from its neighbours.
         '@stylistic/padding-line-between-statements': [
           'error',
-          { blankLine: 'always', prev: '*', next: BLOCK_STATEMENTS },
-          { blankLine: 'always', prev: BLOCK_STATEMENTS, next: '*' },
           { blankLine: 'always', prev: '*', next: 'return' },
           { blankLine: 'always', prev: ['const', 'let'], next: '*' },
           { blankLine: 'any', prev: ['const', 'let'], next: ['const', 'let'] },
           { blankLine: 'always', prev: '*', next: ['case', 'default'] },
-          // Separate the import block from the body. Listed last so it wins for
-          // import pairs; `any` keeps simple-import-sort's own grouping intact.
+          // `any` between same-kind statements keeps simple-import-sort in
+          // charge of how it groups and separates them.
           { blankLine: 'always', prev: 'import', next: '*' },
           { blankLine: 'any', prev: 'import', next: 'import' },
+          { blankLine: 'always', prev: '*', next: 'export' },
+          { blankLine: 'any', prev: 'export', next: 'export' },
+          { blankLine: 'always', prev: '*', next: BLOCK_STATEMENTS },
+          { blankLine: 'always', prev: BLOCK_STATEMENTS, next: '*' },
         ],
       },
     },

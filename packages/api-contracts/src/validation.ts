@@ -57,6 +57,7 @@ export const validateOpenApi = async (input: unknown): Promise<OpenAPIV3.Documen
   }
 
   const document = input as OpenAPIV3.Document;
+
   const validateMedia = (content: Record<string, OpenAPIV3.MediaTypeObject>) => {
     for (const media of Object.values(content)) {
       if (!media.schema) {
@@ -74,6 +75,7 @@ export const validateOpenApi = async (input: unknown): Promise<OpenAPIV3.Documen
       }
     }
   };
+
   const ids = new Set<string>();
 
   for (const { path, method, operation } of operations(document)) {
