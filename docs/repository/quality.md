@@ -293,14 +293,57 @@ pnpm --filter <package> build
 Turbo build outputs include `dist/**` and `.next/**` while excluding
 `.next/cache/**`.
 
+## Continuous Integration
+
+`.github/workflows/ci.yml` runs on pushes to `main` and on every pull request,
+in two jobs:
+
+- **verify** — `turbo run lint typecheck test build`, then `pnpm deps:check` and
+  `pnpm docs:check`, then `git diff --exit-code` so a green run cannot depend on
+  an autofix applied inside the runner.
+- **browser** — installs Chromium and runs `turbo run test:browser`, uploading
+  the Playwright report on failure.
+
+They are separate jobs on purpose: `turbo run test` does **not** imply
+`test:browser`, and a browser-download outage must not block the type and lint
+signal.
+
+Making these **required status checks** is a GitHub branch-protection setting
+that has to be enabled in repository settings. It cannot be committed.
+
 ## Pre-Commit And Commit Messages
 
-Husky pre-commit runs:
+Husky pre-commit runs `lint-staged`: Prettier plus a **syntax-only** ESLint pass
+over staged files.
 
 ```sh
-pnpm build
-pnpm lint
+pnpm exec lint-staged
 ```
+
+The hook previously ran `pnpm build && pnpm lint`. Swapping that for
+`turbo run lint typecheck` would not have helped: `@apps/frontend.docs#lint`
+depends on `docs:prepare` → `docs:generate` → `^build`, so linting the docs app
+builds the backend template. And the docs app's type-aware rules genuinely need
+the generated `.source` types — measured, ESLint on `src/lib/source.ts` exits 0
+with `.source` present and 1 without it. So the fix is to split the **rule set**,
+not the file list.
+
+`@packages/eslint-config/fast` (via root `eslint.config.fast.mjs`) drops the
+`typescript-eslint` type-checked rules and keeps everything decidable from the
+AST — including the import boundaries and `architecture/thin-controller`, neither
+of which needs type information. Type-aware lint, `typecheck`, `build`, `test`
+and the generators they need all run in CI.
+
+Measured on one edited shared-UI file: **16.4s → 1.5s**.
+
+`fast` and `base` share their style rules from `packages/eslint-config/rules/style.mjs`.
+Declaring them separately made the hook demand an import order that `pnpm lint`
+then rejected.
+
+**Do not add `tsc` over staged files.** Passing a file list builds a different
+program than the project and silently changes the result. If typechecking belongs
+in a hook at all, run `tsc -p <project> --noEmit` with the project's generated
+artifacts already present.
 
 Commitlint extends conventional commits and requires a non-empty scope:
 

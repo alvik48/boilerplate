@@ -27,12 +27,24 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
+    "@packages/eslint-config": "workspace:*",
     "dependency-cruiser": "^18.2.0",
     "husky": "^9.1.7",
+    "lint-staged": "^17.5.0",
     "prettier": "catalog:",
     "shadcn": "catalog:",
     "skills": "^1.5.25",
     "turbo": "^2.10.12",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "catalog:"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,mts,cts,mjs,cjs,js,jsx}": [
+      "prettier --write",
+      "eslint --config eslint.config.fast.mjs --no-config-lookup --no-warn-ignored"
+    ],
+    "*.{json,md,css,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }

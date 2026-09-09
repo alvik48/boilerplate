@@ -7,14 +7,15 @@
   "exports": {
     "./base": "./base.mjs",
     "./backend": "./backend.mjs",
+    "./fast": "./fast.mjs",
     "./next": "./next.mjs",
     "./react-library": "./react-library.mjs",
     "./rules/boundaries": "./rules/boundaries.mjs",
     "./rules/thin-controller": "./rules/thin-controller.mjs"
   },
   "scripts": {
-    "lint": "eslint base.mjs backend.mjs next.mjs react-library.mjs rules tests",
-    "lint:fix": "eslint base.mjs backend.mjs next.mjs react-library.mjs rules tests --fix",
+    "lint": "eslint base.mjs backend.mjs fast.mjs next.mjs react-library.mjs rules tests",
+    "lint:fix": "eslint base.mjs backend.mjs fast.mjs next.mjs react-library.mjs rules tests --fix",
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {

@@ -135,11 +135,13 @@ handling removed upstream sources.
 
 ## Commit Hooks
 
-Husky pre-commit runs:
+Husky pre-commit runs `lint-staged`: Prettier plus a syntax-only ESLint pass over
+staged files, using the root `eslint.config.fast.mjs`. Type-aware lint,
+typecheck, build and tests run in CI. See
+[quality.md](quality.md#pre-commit-and-commit-messages).
 
 ```sh
-pnpm build
-pnpm lint
+pnpm exec lint-staged
 ```
 
 Commit messages are checked by commitlint and must use a non-empty conventional
