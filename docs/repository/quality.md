@@ -55,6 +55,38 @@ Shared ESLint configs live in `packages/eslint-config`:
 - `@packages/eslint-config/next`.
 - `@packages/eslint-config/react-library`.
 
+### Style Rules
+
+Prettier owns formatting. It does not sort imports, insert blank lines, or
+choose a function form, so `base` enforces those separately:
+
+- `simple-import-sort/imports` groups imports as side effects, `node:` builtins,
+  external packages, `@apps/*` and `@packages/*` workspace packages, parent
+  imports, sibling imports, then styles. `simple-import-sort/exports` sorts
+  re-exports.
+- `@stylistic/padding-line-between-statements` requires a blank line around
+  `if`, `for`, `while`, `do`, `switch`, `try`, and any braced body, before
+  `return` and before every `export`, above every `case` except the first, and
+  after the import block. Runs of plain `const`/`let` declarations, of imports,
+  and of exports may stay packed, which leaves import and export grouping to
+  the sorter. A braced statement is always separated even inside such a run, so
+  a multi-line arrow assigned to a `const` still gets its blank lines. Entry
+  order in the rule encodes that precedence: the last match wins.
+- `curly` requires braces on every control statement, which also makes
+  brace-less one-liners subject to the blank-line rule.
+- `func-style` requires function expressions, so use
+  `export const handler = () => {}` instead of `export function handler() {}`.
+  Default exports are exempt, so Next.js pages and layouts keep their
+  conventional `export default function` form.
+
+`func-style` is disabled for `packages/ui/src/components/**` and
+`packages/ui/src/lib/utils.ts`. That code is vendored from the shadcn registry
+and refreshed through its CLI, so it keeps the upstream function-declaration
+shape; see [frontend.md](frontend.md#shadcn-and-styling).
+
+Blank-line and import-order violations are autofixable. `func-style` is not,
+because converting a declaration to an expression changes hoisting.
+
 ## Typechecking
 
 Run:

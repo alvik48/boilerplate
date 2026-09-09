@@ -1,26 +1,37 @@
 'use client';
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
 import type { SearchScope } from '@packages/docs-core';
+
 interface Result {
   id: string;
   title: string;
   url: string;
   excerpt: string;
 }
-export function DocumentationSearch() {
+
+export const DocumentationSearch = () => {
   const [query, setQuery] = useState('');
   const [scope, setScope] = useState<SearchScope>('all');
   const [results, setResults] = useState<Result[]>([]);
   const [status, setStatus] = useState('');
+
   useEffect(() => {
     const controller = new AbortController();
-    if (!query.trim()) return;
+
+    if (!query.trim()) {
+      return;
+    }
+
     const timer = setTimeout(() => {
       setStatus('Searching…');
       void fetch(`/api/search?${new URLSearchParams({ query, scope })}`, { signal: controller.signal })
         .then(async (response) => {
-          if (!response.ok) throw new Error('Search failed');
+          if (!response.ok) {
+            throw new Error('Search failed');
+          }
+
           return (await response.json()) as { items: Result[] };
         })
         .then((body) => {
@@ -28,14 +39,18 @@ export function DocumentationSearch() {
           setStatus(body.items.length ? '' : 'No matching documents. Try another phrase or scope.');
         })
         .catch(() => {
-          if (!controller.signal.aborted) setStatus('Search is unavailable. Try again.');
+          if (!controller.signal.aborted) {
+            setStatus('Search is unavailable. Try again.');
+          }
         });
     }, 180);
+
     return () => {
       clearTimeout(timer);
       controller.abort();
     };
   }, [query, scope]);
+
   return (
     <section className="docs-search" aria-label="Documentation search">
       <div className="docs-search-controls">
@@ -74,4 +89,4 @@ export function DocumentationSearch() {
       )}
     </section>
   );
-}
+};

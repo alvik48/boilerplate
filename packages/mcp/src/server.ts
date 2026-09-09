@@ -1,15 +1,17 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import {
   CallToolRequestSchema,
-  ListToolsRequestSchema,
-  ListResourcesRequestSchema,
-  ReadResourceRequestSchema,
-  ListResourceTemplatesRequestSchema,
-  McpError,
   ErrorCode,
+  ListResourcesRequestSchema,
+  ListResourceTemplatesRequestSchema,
+  ListToolsRequestSchema,
+  McpError,
+  ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { paginate, type DocumentationProvider, type SearchInput } from '@packages/docs-core';
-import { documentationTools, descriptorCatalog, type ToolDescriptor } from './descriptors.js';
+
+import { type DocumentationProvider, paginate, type SearchInput } from '@packages/docs-core';
+
+import { descriptorCatalog, documentationTools, type ToolDescriptor } from './descriptors.js';
 
 export interface AuthorizationContext {
   subject?: string;
@@ -27,7 +29,8 @@ export interface ServerOptions {
   handlers?: Record<string, ToolHandler>;
   authorization?: AuthorizationContext;
 }
-export function createProjectServer(options: ServerOptions) {
+
+export const createProjectServer = (options: ServerOptions) => {
   const { provider } = options;
   const descriptors = options.descriptors ?? documentationTools;
   const catalog = descriptorCatalog(descriptors);
@@ -41,8 +44,13 @@ export function createProjectServer(options: ServerOptions) {
       provider.getApiOperation(input.serviceId as string, input.operationId as string),
     ...options.handlers,
   };
-  for (const descriptor of descriptors)
-    if (!handlers[descriptor.implementation]) throw new Error(`Missing MCP handler: ${descriptor.implementation}`);
+
+  for (const descriptor of descriptors) {
+    if (!handlers[descriptor.implementation]) {
+      throw new Error(`Missing MCP handler: ${descriptor.implementation}`);
+    }
+  }
+
   const server = new Server(
     { name: 'project-documentation', version: '1.0.0' },
     {
@@ -51,21 +59,33 @@ export function createProjectServer(options: ServerOptions) {
         'Start with docs://project/integration-index. Search defaults to integration guides and contract references. Repository guidance is public through explicit repository/all scopes. Tools read documentation; they do not execute API operations.',
     },
   );
+
   server.setRequestHandler(ListToolsRequestSchema, () => ({ tools: catalog }));
   server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
     const descriptor = descriptors.find((item) => item.name === request.params.name);
-    if (!descriptor) throw new McpError(ErrorCode.InvalidParams, 'Unknown tool');
+
+    if (!descriptor) {
+      throw new McpError(ErrorCode.InvalidParams, 'Unknown tool');
+    }
+
     try {
-      if (descriptor.requiredScopes.some((scope) => !context.scopes.includes(scope)))
+      if (descriptor.requiredScopes.some((scope) => !context.scopes.includes(scope))) {
         throw new Error('Forbidden: required scope missing');
+      }
+
       const input = descriptor.input.parse(request.params.arguments ?? {});
+
       extra.signal.throwIfAborted();
       const result = await handlers[descriptor.implementation](input, context, extra.signal);
+
       extra.signal.throwIfAborted();
       const structuredContent = descriptor.output.parse(result);
       const text = JSON.stringify(structuredContent);
-      if (Buffer.byteLength(text) > 60000)
+
+      if (Buffer.byteLength(text) > 60000) {
         throw new Error('Result exceeds 60 KB. Read a heading or paginated resource.');
+      }
+
       return { content: [{ type: 'text', text }], structuredContent };
     } catch (error) {
       return {
@@ -94,8 +114,10 @@ export function createProjectServer(options: ServerOptions) {
       Number(b.name === 'integration-index') - Number(a.name === 'integration-index') ||
       a.name.localeCompare(b.name, 'en'),
   );
+
   server.setRequestHandler(ListResourcesRequestSchema, (request) => {
     const page = paginate(resources, provider.manifest.revision, request.params?.cursor);
+
     return { resources: page.items, nextCursor: page.nextCursor };
   });
   server.setRequestHandler(ListResourceTemplatesRequestSchema, () => ({
@@ -106,14 +128,23 @@ export function createProjectServer(options: ServerOptions) {
   }));
   server.setRequestHandler(ReadResourceRequestSchema, (request) => {
     const uri = new URL(request.params.uri);
-    if (uri.hostname !== 'project' || [...uri.searchParams.keys()].some((key) => key !== 'cursor'))
+
+    if (uri.hostname !== 'project' || [...uri.searchParams.keys()].some((key) => key !== 'cursor')) {
       throw new McpError(ErrorCode.InvalidParams, 'Unknown resource');
+    }
+
     const resource = resources.find((item) => item.uri === `${uri.protocol}//${uri.host}${uri.pathname}`);
-    if (!resource) throw new McpError(ErrorCode.InvalidParams, 'Unknown resource');
+
+    if (!resource) {
+      throw new McpError(ErrorCode.InvalidParams, 'Unknown resource');
+    }
+
     const id = uri.pathname.slice(1);
     const cursor = uri.searchParams.get('cursor') ?? undefined;
+
     if (uri.protocol === 'docs:') {
       const doc = provider.getDoc(id, undefined, cursor);
+
       return {
         contents: [
           {
@@ -124,9 +155,11 @@ export function createProjectServer(options: ServerOptions) {
         ],
       };
     }
+
     const spec = provider.manifest.apis.find((item) => item.id === id)!;
     const chunks = JSON.stringify(spec.spec, null, 2).match(/[\s\S]{1,12000}/g) ?? [];
     const page = paginate(chunks, provider.manifest.revision, cursor, 1);
+
     return {
       contents: [
         {
@@ -142,5 +175,6 @@ export function createProjectServer(options: ServerOptions) {
       ],
     };
   });
+
   return server;
-}
+};

@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
 import { ActivityIcon, ArrowRightIcon, CheckCircle2Icon, CircleAlertIcon, SaveIcon, SparklesIcon } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '@packages/ui/components/alert';
 import { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount } from '@packages/ui/components/avatar';
@@ -46,7 +46,7 @@ const tokenSwatches = [
 
 const chartSwatches = ['bg-chart-1', 'bg-chart-2', 'bg-chart-3', 'bg-chart-4', 'bg-chart-5'] as const;
 
-export function ThemeShowcase() {
+export const ThemeShowcase = () => {
   const [theme, setTheme] = useState<ThemeName>('yellow');
   const selectedTheme = useMemo(() => themes.find((item) => item.value === theme) ?? themes[0], [theme]);
 
@@ -290,4 +290,4 @@ export function ThemeShowcase() {
       </div>
     </main>
   );
-}
+};

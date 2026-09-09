@@ -1,8 +1,10 @@
 import { z } from 'zod';
-import { documentOutput, searchOutput, apiListOutput, operationOutput, exampleDocument } from './schemas.js';
+
+import { apiListOutput, documentOutput, exampleDocument, operationOutput, searchOutput } from './schemas.js';
 
 const cursor = z.string().max(120).optional();
 const id = z.string().min(1).max(120);
+
 export interface ToolDescriptor {
   name: string;
   description: string;
@@ -21,6 +23,7 @@ const base = {
   guideIds: ['mcp-quickstart', 'mcp-examples'],
   annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
 };
+
 export const documentationTools: ToolDescriptor[] = [
   {
     ...base,
@@ -87,15 +90,21 @@ export const documentationTools: ToolDescriptor[] = [
   },
 ];
 
-export function descriptorCatalog(descriptors = documentationTools) {
+export const descriptorCatalog = (descriptors = documentationTools) => {
   const names = new Set<string>();
+
   return descriptors.map((descriptor) => {
-    if (names.has(descriptor.name)) throw new Error(`Duplicate MCP tool: ${descriptor.name}`);
+    if (names.has(descriptor.name)) {
+      throw new Error(`Duplicate MCP tool: ${descriptor.name}`);
+    }
+
     names.add(descriptor.name);
+
     for (const example of descriptor.examples) {
       descriptor.input.parse(example.input);
       descriptor.output.parse(example.output);
     }
+
     return {
       name: descriptor.name,
       description: descriptor.description,
@@ -104,4 +113,4 @@ export function descriptorCatalog(descriptors = documentationTools) {
       annotations: descriptor.annotations,
     };
   });
-}
+};

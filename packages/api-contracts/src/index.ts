@@ -1,5 +1,5 @@
-export { validateOpenApi, operations, stableJson, validateExample } from './validation.js';
 export { renderOperation } from './markdown.js';
+export { operations, stableJson, validateExample, validateOpenApi } from './validation.js';
 export type { OpenAPIV3 } from 'openapi-types';
 
 export interface ServiceRegistration {
