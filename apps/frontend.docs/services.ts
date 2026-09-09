@@ -11,7 +11,7 @@ export const services: ServiceRegistration[] = [
     environments: [
       { url: process.env.DOCS_API_BACKEND_TEMPLATE_URL ?? 'http://localhost:3000', description: 'Local example' },
     ],
-    guides: { getHealth: ['integration-health'] },
+    guides: { getHealth: ['integration-health'], listUsers: ['integration-users'] },
   },
 ];
 export const externalContracts: ExternalContract[] = [];

@@ -5,11 +5,12 @@ import { configureApi } from '@packages/api-contracts/nest';
 
 import { apiConfiguration } from './api.config';
 import { AppModule } from './app.module';
-import { HealthModule } from './health.module';
+import { HealthModule } from './health/health.module';
+import { UsersModule } from './users/users.module';
 
 // Real HTTP modules, with no configuration, jobs, or infrastructure startup.
 // Add all feature controllers here; replace infrastructure providers explicitly.
-@Module({ imports: [HealthModule] })
+@Module({ imports: [HealthModule, UsersModule] })
 class SchemaModule {}
 
 export const createApp = async (mode: 'runtime' | 'schema' = 'runtime') => {

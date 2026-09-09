@@ -19,6 +19,25 @@ adapting it. Do not create new apps from a blank directory.
 
 Templates are part of the workspace and should remain valid examples.
 
+## Reference Features
+
+Each app template ships a worked example carrying the layer contract, because a
+template's shape is what an agent copies whether or not it reads the rules. They
+are scaffolding: keep the structure, replace the content.
+
+- **Backend** — `src/users/` has the full stack (controller → use-case service →
+  `domain/` rule → `data/` access, with a unit test and a contract test), while
+  `src/health/` deliberately has **no service** because it returns a constant.
+  The contrast is the teaching: a layer appears when its responsibility appears.
+- **Frontend** — `src/features/articles/` is a list with a **URL-owned filter**,
+  showing `ui/` `model/` `api/`, the `index.ts` / `server.ts` split with
+  `server-only`, and `'use client'` on the interactive piece alone.
+- **DB** — `tests/transactions.test.mjs` covers the transaction helper without a
+  database.
+
+Deleting a reference feature is fine once real features replace it. Deleting the
+_structure_ is not; `pnpm lint` and `pnpm deps:check` enforce it.
+
 ## General Copy Workflow
 
 1. Copy the template directory to the target location.
@@ -67,6 +86,9 @@ Required adaptations:
   `"@packages/db-core": "workspace:*"`.
 - Module names, controllers, and health routes if the template defaults are not
   sufficient.
+- Replace the `src/users/` reference feature with real ones, and replace
+  `docs/integration/users.md` with a guide for the real operations. Every
+  operation needs an authored guide or `pnpm docs:check` fails.
 
 Then run:
 
@@ -74,6 +96,7 @@ Then run:
 pnpm install
 pnpm --filter @apps/backend.<name> lint
 pnpm --filter @apps/backend.<name> typecheck
+pnpm --filter @apps/backend.<name> test
 pnpm --filter @apps/backend.<name> build
 ```
 
@@ -92,11 +115,14 @@ Required adaptations:
 - `package.json` name: `@apps/frontend.<name>`.
 - `dev` and `start` ports in `package.json`.
 - `metadata` in `src/app/layout.tsx`.
-- Placeholder `App name` copy in `src/app/page.tsx`.
+- Placeholder `App name` copy and the composition in `src/app/page.tsx`.
 - Global styles and theme imports according to the app design.
 - Dependencies on `@packages/ui` when using shared UI.
 - `.env.example` for app variables. Public browser variables must use
   `NEXT_PUBLIC_`.
+- Replace `src/features/articles/` and `src/shared/theme-showcase.tsx` with real
+  features, and the tests under `tests/` with real ones. `baseURL` in
+  `playwright.config.ts` must match the app's port.
 
 Then run:
 
@@ -104,6 +130,7 @@ Then run:
 pnpm install
 pnpm --filter @apps/frontend.<name> lint
 pnpm --filter @apps/frontend.<name> typecheck
+pnpm --filter @apps/frontend.<name> test
 pnpm --filter @apps/frontend.<name> build
 ```
 
@@ -125,6 +152,8 @@ Required adaptations:
 - `prisma/schema.prisma` models, enums, and table mappings.
 - Generated Prisma import paths only if generator output changes.
 - Package exports if adding new public modules.
+- Replace `tests/transactions.test.mjs` as the helpers it covers change. Tests
+  run against `dist/`, so `test` depends on `build`.
 
 Then run:
 
@@ -133,6 +162,7 @@ pnpm install
 pnpm --filter @packages/db-<name> prisma:format
 pnpm --filter @packages/db-<name> prisma:generate
 pnpm --filter @packages/db-<name> typecheck
+pnpm --filter @packages/db-<name> test
 pnpm --filter @packages/db-<name> build
 ```
 

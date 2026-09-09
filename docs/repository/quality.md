@@ -259,7 +259,21 @@ pnpm test
 pnpm --filter <package> test
 ```
 
-Backend template uses Jest. DB template uses `node --test tests/*.test.mjs`.
+Each template ships a working test setup, so an app copied from one is covered
+from the first commit rather than silently skipped by `turbo run test`:
+
+| Template                  | Unit tests                                          | Other                                      |
+| ------------------------- | --------------------------------------------------- | ------------------------------------------ |
+| `templates/apps.backend`  | Jest (`*.spec.ts` under `src/`)                     | `node --test` contract tests under `test/` |
+| `templates/apps.frontend` | `node --test` with `tsx` (`tests/*.test.ts`)        | Playwright (`pnpm test:browser`)           |
+| `templates/packages.db`   | `node --test` (`tests/*.test.mjs`, against `dist/`) | —                                          |
+
+`node --test` and Playwright mirror what `apps/frontend.docs` already uses. Do
+not introduce Vitest.
+
+`test:browser` is a separate task from `test`; `turbo run test` does not imply
+it. Both run in CI.
+
 Add tests proportionally to risk:
 
 - Unit tests for pure logic and service behavior.

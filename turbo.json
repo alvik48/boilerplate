@@ -260,6 +260,10 @@
       "outputs": []
     },
     "test:browser": {
+      "cache": false,
+      "outputs": ["test-results/**", "playwright-report/**"]
+    },
+    "@apps/frontend.docs#test:browser": {
       "dependsOn": ["docs:prepare"],
       "cache": false,
       "outputs": ["test-results/**", "playwright-report/**"]
