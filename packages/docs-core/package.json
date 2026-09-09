@@ -22,23 +22,23 @@
   },
   "dependencies": {
     "@packages/api-contracts": "workspace:*",
+    "github-slugger": "2.0.0",
     "gray-matter": "4.0.3",
-    "zod": "4.4.3",
-    "unified": "11.0.5",
-    "remark-parse": "11.0.0",
-    "remark-gfm": "4.0.1",
-    "remark-stringify": "11.0.0",
-    "unist-util-visit": "5.1.0",
     "mdast-util-to-string": "4.0.0",
-    "github-slugger": "2.0.0"
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
+    "remark-stringify": "11.0.0",
+    "unified": "11.0.5",
+    "unist-util-visit": "5.1.0",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/typescript-config": "workspace:*",
-    "@types/node": "^25.6.0",
-    "eslint": "^9.39.0",
-    "typescript": "6.0.3",
-    "prettier": "^3.8.4",
-    "@types/mdast": "4.0.4"
+    "@types/mdast": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   }
 }

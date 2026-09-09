@@ -25,14 +25,14 @@
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/typescript-config": "workspace:*",
-    "@types/node": "^25.5.0",
-    "eslint": "^9",
-    "typescript": "^5.9.3"
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.5.0",
-    "@prisma/client": "^7.5.0",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
     "dotenv": "^17.3.1",
-    "prisma": "^7.5.0"
+    "prisma": "^7.10.0"
   }
 }

@@ -31,6 +31,11 @@ Templates are part of the workspace and should remain valid examples.
 7. Run `pnpm install` from the repository root.
 8. Run focused quality checks for the new package.
 
+Template manifests reference shared versions with the `"catalog:"` specifier,
+which resolves from the `catalog:` block in `pnpm-workspace.yaml`. Copies that
+stay inside this workspace need no change. When lifting a template out of the
+repository, replace each `"catalog:"` with the literal version it resolves to.
+
 Example:
 
 ```sh

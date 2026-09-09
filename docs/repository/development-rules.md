@@ -53,6 +53,18 @@ filtered `dev` command for the app you are touching.
   needs them.
 - Do not rely on transitive dependencies from another workspace package.
 - Keep runtime dependencies and devDependencies separated.
+- Declare a dependency in every package that imports it, even when the root
+  manifest already depends on it. Node resolution walks up to the repository
+  root, so an undeclared dependency appears to work locally but is a phantom
+  dependency: it disappears from pruned installs such as `pnpm deploy`, and it
+  hides the package from Turbo's per-package cache key.
+- When a dependency is used by more than one package, declare its version once
+  in the `catalog:` block of `pnpm-workspace.yaml` and reference it from each
+  manifest as `"catalog:"`. Bump the version in the catalog only. Dependencies
+  used by a single package keep a literal range in that package.
+- Keep packages that declare peer dependencies on each other, such as the
+  `@nestjs/*` runtime packages, pinned to one exact version and bump them
+  together.
 
 ## Code Ownership Rules
 
