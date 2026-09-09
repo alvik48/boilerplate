@@ -92,13 +92,13 @@ filtered `dev` command for the app you are touching.
 
 ## Code Modularity Rules
 
-- Keep code in small, focused files organized by feature, purpose, and ownership
-  boundary.
-- Avoid large mixed-responsibility files that force agents to load unrelated
-  context. Extract cohesive helpers, types, components, services, and tests when
-  a file starts carrying multiple concepts.
-- Split code by stable domain boundaries instead of arbitrary tiny fragments, and
-  keep public exports explicit.
+Decomposition criteria, the anti-over-engineering rules, performance priorities,
+and testing proportionality all live in [code-design.md](code-design.md). Load it
+for every code change; it is not restated here.
+
+The short version: split by stable domain boundaries rather than arbitrary
+fragments, keep public exports explicit, and require every new abstraction to
+point at a problem that exists now.
 
 ## Documentation Rules
 

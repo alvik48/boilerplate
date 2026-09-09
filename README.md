@@ -17,6 +17,8 @@ for the current task.
   layout, ownership boundaries, package naming, import rules.
 - [docs/repository/development-rules.md](docs/repository/development-rules.md) -
   shared development rules and constraints.
+- [docs/repository/code-design.md](docs/repository/code-design.md) -
+  decomposition, anti-over-engineering, performance, and testing proportionality.
 - [docs/repository/commands.md](docs/repository/commands.md) - root commands,
   filtered package commands, Turbo usage.
 - [docs/repository/templates.md](docs/repository/templates.md) - how to create
@@ -42,6 +44,11 @@ for the current task.
 
 - Any task: read this README, then
   [docs/repository/README.md](docs/repository/README.md).
+- Any code change also loads
+  [docs/repository/development-rules.md](docs/repository/development-rules.md),
+  [docs/repository/code-design.md](docs/repository/code-design.md), and
+  [docs/repository/quality.md](docs/repository/quality.md). Task rows below are
+  additive to that baseline.
 - Planning work: add
   [docs/repository/change-workflow.md](docs/repository/change-workflow.md#temporary-implementation-plans)
   for temporary implementation plan rules.
