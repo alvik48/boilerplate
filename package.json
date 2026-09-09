@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.20.0",
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky && bin/link-agent-skills.sh",
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "format": "turbo run format",
@@ -22,7 +22,8 @@
     "docs:check": "turbo run docs:check",
     "docs:build": "turbo run build --filter=@apps/frontend.docs",
     "docs:dev": "turbo run dev --filter=@apps/frontend.docs",
-    "docs:package": "turbo run docs:package --filter=@apps/frontend.docs"
+    "docs:package": "turbo run docs:package --filter=@apps/frontend.docs",
+    "skills:link": "bin/link-agent-skills.sh"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",

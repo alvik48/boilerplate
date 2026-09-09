@@ -21,6 +21,37 @@ The CLI can record a hash supplied by its source snapshot service instead of
 calculating one from the installed directory. Do not treat `computedHash` as a
 universal checksum of the vendored files; review their actual Git diff.
 
+## Discoverability
+
+Agents that auto-discover skills read their own directory — Claude Code uses
+`.claude/skills`, Codex `.codex/skills` — not `.agents/skills`. Without a link,
+the vendored skills are present but never offered.
+
+`bin/link-agent-skills.sh` symlinks both to `../.agents/skills`. It runs from the
+root `prepare` script, so `pnpm install` is enough, and can be re-run directly:
+
+```sh
+pnpm skills:link
+```
+
+It is idempotent, leaves a real (non-symlink) directory alone, and does not fail
+the install when symlink creation is unavailable — on Windows that needs
+Developer Mode or elevation, in which case copy `.agents/skills` across instead.
+
+`.claude/` and `.codex/` are gitignored, so the link is rebuilt per clone rather
+than committed.
+
+Linking the whole directory exposes every vendored skill to auto-discovery, so
+all their descriptions load. That is the intended trade; if it proves noisy,
+switch to per-skill symlinks.
+
+## Project-Owned Skills
+
+`project-feature-workflow` is written and owned here rather than vendored, so it
+has no entry in `skills-lock.json` and is never touched by `pnpm skills:update`.
+It is procedural and links to the repository documents instead of restating them,
+so it cannot drift from them.
+
 ## Maintaining Vendored Skills
 
 Inspect local skills or explicitly refresh them from upstream:
@@ -110,10 +141,10 @@ the correction; do not resurrect the old file.
 
 **Current patches.**
 
-| Patch                                        | Corrects                                                                                                                                                                                                                                                                                                                 |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `patches/skills/nestjs-best-practices.patch` | `rules/arch-single-responsibility.md` taught orchestration in the controller ("Orchestration in controller or dedicated orchestrator", with a handler calling create-order → charge → notify). Replaced with a `CreateOrderUseCase` holding the sequence and a controller making one call, per [backend.md](backend.md). |
-| `patches/skills/node.patch`                  | `SKILL.md` prescribed type stripping for Node TypeScript generally, in both the body and the activation `description`. Scoped to standalone scripts and tooling: NestJS compiles with `nest build` because `emitDecoratorMetadata` needs a transform that type stripping does not perform.                               |
+| Patch                                        | Corrects                                                                                                                                                                                                                                                                                                                                        |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patches/skills/nestjs-best-practices.patch` | `rules/arch-single-responsibility.md` taught orchestration in the controller ("Orchestration in controller or dedicated orchestrator", with a handler calling create-order → charge → notify). Replaced with a `CreateOrderUseCase` holding the sequence and a controller making one call, per [backend.md](backend.md#the-orchestration-rule). |
+| `patches/skills/node.patch`                  | `SKILL.md` prescribed type stripping for Node TypeScript generally, in both the body and the activation `description`. Scoped to standalone scripts and tooling: NestJS compiles with `nest build` because `emitDecoratorMetadata` needs a transform that type stripping does not perform.                                                      |
 
 A patch is only the third layer of a correction. The positive rule in the
 repository document and the ESLint rule that blocks the violation both stay — a
@@ -150,27 +181,30 @@ and the configured `next-devtools` MCP. See [frontend.md](frontend.md) and
 
 ## Core Skill Map
 
-| Skill                                  | Use when                                                                                        |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `turborepo`                            | Monorepo structure, `turbo.json`, task pipelines, filters, affected builds, package boundaries. |
-| `typescript-magician`                  | TypeScript compiler errors, strict typing, generics, type guards, replacing `any`.              |
-| `node`                                 | Node.js runtime behavior, graceful shutdown, streams, stuck tests, profiling, env handling.     |
-| `nestjs-best-practices`                | NestJS modules, DI, controllers, services, security, API design, backend testing.               |
-| `next-cache-components-adoption`       | Enabling Cache Components and migrating an existing Next.js app to use them.                    |
-| `next-cache-components-optimizer`      | Cache boundaries, `use cache`, `cacheLife`, `cacheTag`, and prerendering optimization.          |
-| `frontend-design`                      | New UI, redesigns, visual direction, typography, layout quality.                                |
-| `shadcn`                               | shadcn components, registries, forms, icons, composition, shared UI work.                       |
-| `prisma-cli`                           | Prisma generate, migrate, deploy, reset, format, validate, studio, debug.                       |
-| `prisma-client-api`                    | Prisma queries, filters, relations, transactions, raw SQL, client methods.                      |
-| `prisma-database-setup`                | Provider setup, connection strings, driver adapters, database troubleshooting.                  |
-| `prisma-postgres`                      | Prisma Postgres console, create-db, Management API, connection workflows.                       |
-| `prisma-postgres-setup`                | Provisioning and connecting a new Prisma Postgres database.                                     |
-| `prisma-upgrade-v7`                    | Prisma 6 to 7 migrations, `prisma-client` generator, adapters, config changes.                  |
-| `prisma-driver-adapter-implementation` | Implementing or modifying Prisma driver adapter interfaces.                                     |
-| `skill-optimizer`                      | Improving skills themselves, activation rules, benchmark loops, regression triage.              |
+| Skill                                  | Use when                                                                                         |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `turborepo`                            | Monorepo structure, `turbo.json`, task pipelines, filters, affected builds, package boundaries.  |
+| `typescript-magician`                  | TypeScript compiler errors, strict typing, generics, type guards, replacing `any`.               |
+| `node`                                 | Node.js runtime behavior, graceful shutdown, streams, stuck tests, profiling, env handling.      |
+| `nestjs-best-practices`                | NestJS modules, DI, controllers, services, security, API design, backend testing.                |
+| `next-cache-components-adoption`       | Enabling Cache Components and migrating an existing Next.js app to use them.                     |
+| `next-cache-components-optimizer`      | Cache boundaries, `use cache`, `cacheLife`, `cacheTag`, and prerendering optimization.           |
+| `frontend-design`                      | New UI, redesigns, visual direction, typography, layout quality.                                 |
+| `shadcn`                               | shadcn components, registries, forms, icons, composition, shared UI work.                        |
+| `prisma-cli`                           | Prisma generate, migrate, deploy, reset, format, validate, studio, debug.                        |
+| `prisma-client-api`                    | Prisma queries, filters, relations, transactions, raw SQL, client methods.                       |
+| `prisma-database-setup`                | Provider setup, connection strings, driver adapters, database troubleshooting.                   |
+| `prisma-postgres`                      | Prisma Postgres console, create-db, Management API, connection workflows.                        |
+| `prisma-postgres-setup`                | Provisioning and connecting a new Prisma Postgres database.                                      |
+| `prisma-upgrade-v7`                    | Prisma 6 to 7 migrations, `prisma-client` generator, adapters, config changes.                   |
+| `prisma-driver-adapter-implementation` | Implementing or modifying Prisma driver adapter interfaces.                                      |
+| `skill-optimizer`                      | Improving skills themselves, activation rules, benchmark loops, regression triage.               |
+| `project-feature-workflow`             | Project-owned. Adding or changing a feature: owner, layer, implementation, verification, review. |
 
 ## Task-Based Selection
 
+- Any feature work, backend or frontend: `project-feature-workflow` first, then
+  the stack-specific skills below.
 - Monorepo/package task: `turborepo`.
 - New backend service: `turborepo`, `nestjs-best-practices`, `node`.
 - Backend with DB: add `prisma-client-api` and `prisma-cli`.

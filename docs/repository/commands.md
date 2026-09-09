@@ -109,7 +109,12 @@ Current root `package.json` exposes:
 ```sh
 pnpm skills:list
 pnpm skills:update
+pnpm skills:link
 ```
+
+`skills:link` symlinks `.claude/skills` and `.codex/skills` to `.agents/skills`
+so auto-discovering agents can see them. It runs from `prepare`, so
+`pnpm install` already does it. See [skills.md](skills.md#discoverability).
 
 `skills:list` lists local skills. `skills:update` runs `bin/update-skills.sh`,
 which downloads upstream versions for this project's skills and then re-applies
