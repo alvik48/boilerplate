@@ -43,10 +43,21 @@ packages:
   - apps/*
   - packages/*
   - templates/*
+
+catalog:
+  typescript: 6.0.3
+  eslint: ^10.10.0
+  # ... other versions shared by more than one package
 ```
 
 Templates are workspace packages so they must stay buildable, lintable, and
 typecheckable.
+
+The `catalog:` block is the single source of truth for every version used by
+more than one workspace package. Manifests reference those versions with the
+`"catalog:"` specifier rather than repeating a range, so a shared version is
+bumped in one place. See
+[dependency rules](development-rules.md#dependency-rules).
 
 ## Current Packages
 

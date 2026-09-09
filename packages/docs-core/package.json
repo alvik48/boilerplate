@@ -30,15 +30,15 @@
     "remark-stringify": "11.0.0",
     "unified": "11.0.5",
     "unist-util-visit": "5.1.0",
-    "zod": "4.5.4"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/typescript-config": "workspace:*",
-    "@types/mdast": "4.0.4",
-    "@types/node": "^25.6.0",
-    "eslint": "^10.10.0",
-    "prettier": "^3.9.6",
-    "typescript": "6.0.3"
+    "@types/mdast": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   }
 }

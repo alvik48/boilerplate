@@ -13,21 +13,21 @@
   },
   "dependencies": {
     "@packages/ui": "workspace:*",
-    "lucide-react": "^1.43.0",
-    "next": "^16.3.4",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/typescript-config": "workspace:*",
-    "@tailwindcss/postcss": "^4.3.3",
-    "@types/node": "^25.6.0",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.7",
-    "eslint": "^10.10.0",
-    "prettier": "^3.9.6",
-    "tailwindcss": "^4.3.3",
-    "typescript": "^6.0.3"
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
   }
 }
