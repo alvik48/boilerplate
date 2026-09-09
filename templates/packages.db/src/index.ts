@@ -15,5 +15,6 @@ export * from './transactions.js';
  */
 export const createPrismaClient = (connectionString: string): PrismaClient => {
   const adapter = new PrismaPg({ connectionString });
+
   return new PrismaClient({ adapter });
 };

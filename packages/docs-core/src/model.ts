@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import type { ExternalContract, OpenAPIV3, ServiceRegistration } from '@packages/api-contracts';
 
 export const metadataSchema = z.object({

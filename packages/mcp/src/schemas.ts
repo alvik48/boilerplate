@@ -3,6 +3,7 @@ import { z } from 'zod';
 const cursor = z.string().optional();
 const revision = z.string();
 const link = z.object({ id: z.string(), title: z.string(), url: z.string() });
+
 export const documentOutput = z.object({
   id: z.string(),
   title: z.string(),

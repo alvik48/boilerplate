@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
-import { writeFile, rename, rm } from 'node:fs/promises';
+import { rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+
+import { expect, test } from '@playwright/test';
 import { z } from 'zod';
 
 test('desktop and mobile sections, normalized links and scoped search', async ({ page }) => {
@@ -22,8 +23,11 @@ test('desktop and mobile sections, normalized links and scoped search', async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: 'Open Sidebar', exact: true }).click();
   await page.getByRole('button', { name: 'Integration', exact: true }).click();
-  for (const name of ['Integration', 'API', 'Repository'])
+
+  for (const name of ['Integration', 'API', 'Repository']) {
     await expect(page.getByRole('dialog').getByRole('link', { name, exact: true })).toBeVisible();
+  }
+
   await page.getByRole('dialog').getByRole('link', { name: 'Repository', exact: true }).click();
   await expect(page).toHaveURL(/\/docs\/repository$/);
   await page.locator('#nd-sidebar-mobile').getByRole('button', { name: 'Close Sidebar', exact: true }).click();
@@ -35,6 +39,7 @@ test('health playground sends a real CORS request and renders the contract', asy
   await page.goto('/docs/api/backend-template/getHealth');
   await expect(page.getByRole('heading', { name: 'Check template health', exact: true }).first()).toBeVisible();
   const response = page.waitForResponse((response) => response.url() === 'http://localhost:3000/health');
+
   await page.getByRole('button', { name: /send/i }).click();
   expect((await response).status()).toBe(200);
   await page.screenshot({ path: 'test-results/health-playground.png', fullPage: true });
@@ -45,6 +50,7 @@ test('authenticated body/error fixture never persists credentials', async ({ pag
   const denied = page.waitForResponse(
     (response) => response.url() === 'http://localhost:3999/echo' && response.request().method() === 'POST',
   );
+
   await page.getByRole('button', { name: /send/i }).click();
   expect((await denied).status()).toBe(401);
   await page.getByRole('button', { name: 'Authorization', exact: true }).click();
@@ -52,8 +58,10 @@ test('authenticated body/error fixture never persists credentials', async ({ pag
   const accepted = page.waitForResponse(
     (response) => response.url() === 'http://localhost:3999/echo' && response.status() === 200,
   );
+
   await page.getByRole('button', { name: /send/i }).click();
   const response = await accepted;
+
   expect(await response.json()).toEqual({ message: 'hello' });
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain('test-only-token');
   await page.reload();
@@ -79,6 +87,7 @@ test('root Markdown additions, edits, renames and deletion refresh site, exports
         params: { name: 'get_doc', arguments: { id: 'browser-verification' } },
       },
     });
+
     return z
       .object({
         result: z.object({
@@ -88,6 +97,7 @@ test('root Markdown additions, edits, renames and deletion refresh site, exports
       })
       .parse(await response.json()).result;
   };
+
   try {
     await writeFile(file, content('Unique live content'));
     await expect
@@ -108,6 +118,7 @@ test('root Markdown additions, edits, renames and deletion refresh site, exports
     await expect(page.getByText('Updated live content')).toBeVisible({ timeout: 30000 });
     const search = await request.get('/api/search?query=Updated%20live%20content&scope=integration');
     const searchBody = (await search.json()) as { items: { id: string }[] };
+
     expect(searchBody.items.some((item) => item.id === 'browser-verification')).toBe(true);
     expect((await readMcp()).structuredContent?.markdown).toContain('Updated live content');
     await rename(file, moved);

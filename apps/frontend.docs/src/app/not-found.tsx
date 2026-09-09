@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 export default function NotFound() {
   return (
     <main className="mx-auto max-w-2xl p-12">
