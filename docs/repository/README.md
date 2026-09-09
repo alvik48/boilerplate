@@ -39,6 +39,24 @@ for the current task.
 | Change an external contract | [documentation.md](documentation.md), [integration index](../integration/README.md), affected integration guides |
 | Choose AI skills or MCP     | [skills.md](skills.md), [mcp-servers.md](mcp-servers.md)                                                         |
 
+## Path-Based Routing
+
+The matrix above keys off how a task is described, which fails when the request
+names no architecture at all — "добавь фильтр пользователей" matches no row.
+Route by the paths the change actually touches:
+
+| Touched path                                                               | Also load                                            | Skills                                                                                                |
+| -------------------------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `apps/backend.*/**`, `templates/apps.backend/**`                           | [backend.md](backend.md)                             | `nestjs-best-practices`, `node` (as patched — see [skills.md](skills.md#correcting-a-vendored-skill)) |
+| `apps/frontend.*/**`, `templates/apps.frontend/**`                         | [frontend.md](frontend.md)                           | `next-cache-components-*`, `next-devtools` MCP                                                        |
+| `packages/ui/**`                                                           | [frontend.md](frontend.md)                           | `shadcn`, `frontend-design`                                                                           |
+| `packages/db-*/**`, `**/*.prisma`                                          | [databases.md](databases.md), [env.md](env.md)       | `prisma-client-api`, `prisma-cli`                                                                     |
+| `packages/eslint-config/**`, `packages/typescript-config/**`, `turbo.json` | [quality.md](quality.md), [commands.md](commands.md) | `turborepo`                                                                                           |
+| `docs/integration/**`, any external contract                               | [documentation.md](documentation.md)                 | —                                                                                                     |
+
+Rows are additive to the baseline above, and to each other: a change touching a
+backend app and a DB package loads both.
+
 ## Documentation Rules
 
 - Keep root README as the stable entry point.

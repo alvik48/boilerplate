@@ -34,9 +34,21 @@ Use this workflow when updating or extending existing code.
 
 ## 1. Understand The Current State
 
+Before editing anything, state three things in the response:
+
+1. **Documents loaded** — the baseline (`development-rules.md`,
+   `code-design.md`, `quality.md`) plus the rows matching the task and the paths
+   it touches.
+2. **Skills loaded** — or explicitly none, and why.
+3. **The owning app or package, and the boundary the change belongs to.**
+
+This is what makes rule loading observable rather than assumed. An agent that
+cannot name the documents it read has not read them. Links are not followed
+automatically — nested instruction files must actually be opened.
+
 - Read the root [README.md](../../README.md) and the relevant
   `docs/repository/*.md`
-  files.
+  files. See the [task matrix and path-based routing](README.md#path-based-routing).
 - Inspect the package's `package.json`, tsconfig, ESLint config, README, and
   nearby source files.
 - Check whether the same pattern already exists in another app or package.

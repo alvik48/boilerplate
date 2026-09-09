@@ -314,6 +314,8 @@ chore(db-core): regenerate prisma client
 
 A code change is complete when:
 
+- The documents and skills loaded, and the owning boundary, were stated before
+  editing. See [change-workflow.md](change-workflow.md).
 - Relevant repository docs and local skills were consulted.
 - Affected docs were checked against the final code and config, and any drift
   was fixed in the same change.
