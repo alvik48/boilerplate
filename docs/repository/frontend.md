@@ -23,6 +23,78 @@ The template includes:
 - ESLint and Prettier scripts.
 - A placeholder page and metadata that must be replaced for a real app.
 
+See [code-design.md](code-design.md) for decomposition, over-engineering, and
+performance rules that apply to every change.
+
+## Application Structure
+
+```text
+src/app/**             routes only: layout, page, error, loading, route handlers.
+                       Composition and kicking off server data loading.
+                       No business branching.
+src/features/<name>/   ui/       feature components
+                       model/    hooks, state, business logic
+                       api/      server functions, fetchers, server actions
+                       index.ts  client-safe public entry: UI, hooks, types
+                       server.ts public entry for server-only code (add when needed)
+src/shared/            app-local primitives and helpers not worth promoting
+packages/ui            cross-app primitives only
+```
+
+Rules:
+
+- A page composes and lays out. Business rules, multi-step flows, and non-trivial
+  transformations get named functions, hooks, or modules inside the feature.
+- Features import other features only through those public entries.
+- `shared` never imports `features`.
+- **A business component does not move to `packages/ui` because it might be
+  reused.** It moves when a second app actually imports it.
+- Pushing `'use client'` up a file to satisfy one interactive child is a
+  decomposition signal — extract the interactive part instead of converting the
+  parent.
+
+### Feature Public Entries
+
+Public entries are split **by environment**, not merged into one barrel. A single
+`index.ts` re-exporting both client components and server fetchers pulls
+server-only dependencies into the client graph the moment anything imports it,
+and it is the catch-all barrel
+[code-design.md](code-design.md#anti-over-engineering) already rules out.
+
+- `index.ts` — client-safe only: components, hooks, types.
+- `server.ts` — fetchers, data access, anything importing `server-only`.
+- Each entry re-exports a **named** public API. Never `export *`.
+- Modules that must never reach the browser import the `server-only` package,
+  which turns a boundary violation into a build error rather than a silent leak.
+- Server Actions are importable from Client Components by design — that is not a
+  violation. Keep them in `api/` and export them from whichever entry their
+  consumers use.
+
+Reference:
+[Preventing environment poisoning](https://nextjs.org/docs/app/getting-started/server-and-client-components#preventing-environment-poisoning).
+
+## State Ownership
+
+| State                                                              | Owner                                                                                                |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Ephemeral UI: menu open, hover, local toggle                       | `useState` in the nearest owning component                                                           |
+| Form values                                                        | The form root                                                                                        |
+| Filters, sort, pagination that must survive reload or be shareable | The URL (`searchParams`)                                                                             |
+| Server data                                                        | Server Component fetch or route cache. A client cache only when the client genuinely owns refetching |
+| Shared by sibling components                                       | Nearest common parent                                                                                |
+| Genuinely app-wide: theme, session, locale                         | One documented provider                                                                              |
+| Derivable from other state                                         | Not stored — derived during render                                                                   |
+
+A deliberate editable draft of server data is separate state, and belongs to
+whichever component owns the edit.
+
+**Hard rule: no `useEffect` that copies props into state, or that keeps two
+copies of the same value in sync.** Derive during render, lift the state, or key
+the component instead.
+
+Reference:
+[Choosing the state structure](https://react.dev/learn/choosing-the-state-structure).
+
 ## Next.js Rules
 
 - Prefer Server Components by default.
@@ -48,9 +120,13 @@ The package currently exports:
 
 - `./styles.css` and `./globals.css`.
 - `./components/*`.
-- `./hooks/*`.
 - `./lib/*`.
 - `./themes/*`.
+
+There is deliberately no `./hooks/*` export. Add one together with the first
+hook that two apps actually import, not before — an export subpath pointing at a
+directory that does not exist is a broken contract, and inventing a hook to
+justify the subpath is a speculative abstraction.
 
 Rules:
 

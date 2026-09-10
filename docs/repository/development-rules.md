@@ -8,6 +8,19 @@ audience: [developer, agent]
 
 # Development Rules
 
+## Precedence
+
+When two sources disagree, follow them in this order:
+
+**repository docs > package config > skill examples**
+
+Repository documents state this project's decisions. Package config encodes them
+mechanically. Skills are mostly third-party domain guidance, written without
+knowledge of this repository, and their examples are the least authoritative
+thing in the tree. A skill example that contradicts a repository rule is a defect
+in the skill — fix the skill's text and mark the edit, per
+[skills.md](skills.md#editing-a-skill).
+
 ## Core Rules
 
 - Read the root [README.md](../../README.md) first.
@@ -79,13 +92,13 @@ filtered `dev` command for the app you are touching.
 
 ## Code Modularity Rules
 
-- Keep code in small, focused files organized by feature, purpose, and ownership
-  boundary.
-- Avoid large mixed-responsibility files that force agents to load unrelated
-  context. Extract cohesive helpers, types, components, services, and tests when
-  a file starts carrying multiple concepts.
-- Split code by stable domain boundaries instead of arbitrary tiny fragments, and
-  keep public exports explicit.
+Decomposition criteria, the anti-over-engineering rules, performance priorities,
+and testing proportionality all live in [code-design.md](code-design.md). Load it
+for every code change; it is not restated here.
+
+The short version: split by stable domain boundaries rather than arbitrary
+fragments, keep public exports explicit, and require every new abstraction to
+point at a problem that exists now.
 
 ## Documentation Rules
 

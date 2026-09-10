@@ -2,18 +2,14 @@
 import nextPlugin from '@next/eslint-plugin-next';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
+
 import { baseConfig } from './base.mjs';
 
 export function nextConfig(tsconfigRootDir) {
   return [
     ...baseConfig(tsconfigRootDir),
     {
-      ignores: [
-        '.next/**',
-        'next-env.d.ts',
-        'node_modules/**',
-        'postcss.config.mjs',
-      ],
+      ignores: ['.next/**', 'next-env.d.ts', 'node_modules/**', 'postcss.config.mjs'],
     },
     {
       files: ['**/*.{ts,tsx}'],

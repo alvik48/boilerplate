@@ -6,9 +6,8 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-// Statements that must be surrounded by blank lines. `block-like` covers braced
-// bodies; the explicit keywords also catch brace-less one-liners.
-const BLOCK_STATEMENTS = ['block-like', 'if', 'for', 'while', 'do', 'switch', 'try'];
+import { RESTRICTED_IMPORTS_BASE } from './rules/boundaries.mjs';
+import { COMPLEXITY_SIGNALS, SYNTACTIC_RULES, TEST_FILES } from './rules/style.mjs';
 
 export function baseConfig(tsconfigRootDir) {
   return tseslint.config(
@@ -20,6 +19,10 @@ export function baseConfig(tsconfigRootDir) {
         'coverage/**',
         'generated/**',
         'src/generated/**',
+        // Guardrail fixtures contain deliberate violations; the fixture suite
+        // asserts against them directly. Linting them repo-wide would fail by
+        // design.
+        'fixtures/**',
       ],
     },
     eslint.configs.recommended,
@@ -41,42 +44,20 @@ export function baseConfig(tsconfigRootDir) {
         'simple-import-sort': simpleImportSort,
       },
       rules: {
-        'prettier/prettier': ['error', { endOfLine: 'auto' }],
-        curly: ['error', 'all'],
-        'func-style': ['error', 'expression', { allowArrowFunctions: true }],
-        'simple-import-sort/imports': [
-          'error',
-          {
-            groups: [
-              ['^\\u0000'],
-              ['^node:'],
-              ['^@?\\w'],
-              ['^@(apps|packages)/'],
-              ['^\\.\\.'],
-              ['^\\./'],
-              ['^.+\\.s?css$'],
-            ],
-          },
-        ],
-        'simple-import-sort/exports': 'error',
-        // The last matching entry wins, so the `any` exemptions sit above the
-        // block rules. That lets runs of plain imports or exports stay packed
-        // while a braced one is still separated from its neighbours.
-        '@stylistic/padding-line-between-statements': [
-          'error',
-          { blankLine: 'always', prev: '*', next: 'return' },
-          { blankLine: 'always', prev: ['const', 'let'], next: '*' },
-          { blankLine: 'any', prev: ['const', 'let'], next: ['const', 'let'] },
-          { blankLine: 'always', prev: '*', next: ['case', 'default'] },
-          // `any` between same-kind statements keeps simple-import-sort in
-          // charge of how it groups and separates them.
-          { blankLine: 'always', prev: 'import', next: '*' },
-          { blankLine: 'any', prev: 'import', next: 'import' },
-          { blankLine: 'always', prev: '*', next: 'export' },
-          { blankLine: 'any', prev: 'export', next: 'export' },
-          { blankLine: 'always', prev: '*', next: BLOCK_STATEMENTS },
-          { blankLine: 'always', prev: BLOCK_STATEMENTS, next: '*' },
-        ],
+        ...COMPLEXITY_SIGNALS,
+        // Shared with the pre-commit config so the hook and `pnpm lint` cannot
+        // disagree about import order or blank lines.
+        ...SYNTACTIC_RULES,
+        'no-restricted-imports': ['error', RESTRICTED_IMPORTS_BASE],
+      },
+    },
+    {
+      // Tests are long by nature: setup, many cases, and assertions that read
+      // better inline than extracted. The size signals say nothing useful here.
+      files: TEST_FILES,
+      rules: {
+        'max-lines': 'off',
+        'max-lines-per-function': 'off',
       },
     },
   );

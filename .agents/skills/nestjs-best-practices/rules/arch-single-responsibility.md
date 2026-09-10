@@ -47,6 +47,11 @@ export class UserAndOrderService {
 
 **Correct (focused services with single responsibility):**
 
+<!-- LOCAL EDIT — upstream put the create-order sequence in the controller. Rewritten
+     to a CreateOrderUseCase with the controller making one call, per
+     docs/repository/backend.md#the-orchestration-rule. See
+     docs/repository/skills.md#editing-a-skill. -->
+
 ```typescript
 // Focused services with single responsibility
 @Injectable()
@@ -84,21 +89,32 @@ export class OrderStatsService {
   }
 }
 
-// Orchestration in controller or dedicated orchestrator
-@Controller('orders')
-export class OrdersController {
+// Orchestration belongs in a use-case service, never in the controller.
+@Injectable()
+export class CreateOrderUseCase {
   constructor(
     private orders: OrdersService,
     private payment: PaymentService,
     private notifications: NotificationService,
   ) {}
 
-  @Post()
-  async create(@CurrentUser() user: User, @Body() dto: CreateOrderDto) {
-    const order = await this.orders.create(user.id, dto);
+  async execute(userId: string, dto: CreateOrderDto): Promise<Order> {
+    const order = await this.orders.create(userId, dto);
     await this.payment.charge(order);
     await this.notifications.sendOrderConfirmation(order);
     return order;
+  }
+}
+
+// The controller owns routing and the request/response boundary, and makes
+// exactly one call into the feature.
+@Controller('orders')
+export class OrdersController {
+  constructor(private createOrder: CreateOrderUseCase) {}
+
+  @Post()
+  async create(@CurrentUser() user: User, @Body() dto: CreateOrderDto) {
+    return this.createOrder.execute(user.id, dto);
   }
 }
 ```

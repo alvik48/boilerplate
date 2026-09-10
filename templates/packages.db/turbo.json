@@ -10,6 +10,10 @@
     "lint": {
       "env": ["POSTGRES_URL"]
     },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
     "prisma:generate": {
       "env": ["POSTGRES_URL"],
       "outputs": ["generated/**"]

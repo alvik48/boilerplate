@@ -1,6 +1,7 @@
 // @ts-check
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
+
 import { baseConfig } from './base.mjs';
 
 export function reactLibraryConfig(tsconfigRootDir) {

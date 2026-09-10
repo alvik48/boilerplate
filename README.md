@@ -17,6 +17,8 @@ for the current task.
   layout, ownership boundaries, package naming, import rules.
 - [docs/repository/development-rules.md](docs/repository/development-rules.md) -
   shared development rules and constraints.
+- [docs/repository/code-design.md](docs/repository/code-design.md) -
+  decomposition, anti-over-engineering, performance, and testing proportionality.
 - [docs/repository/commands.md](docs/repository/commands.md) - root commands,
   filtered package commands, Turbo usage.
 - [docs/repository/templates.md](docs/repository/templates.md) - how to create
@@ -42,6 +44,11 @@ for the current task.
 
 - Any task: read this README, then
   [docs/repository/README.md](docs/repository/README.md).
+- Any code change also loads
+  [docs/repository/development-rules.md](docs/repository/development-rules.md),
+  [docs/repository/code-design.md](docs/repository/code-design.md), and
+  [docs/repository/quality.md](docs/repository/quality.md). Task rows below are
+  additive to that baseline.
 - Planning work: add
   [docs/repository/change-workflow.md](docs/repository/change-workflow.md#temporary-implementation-plans)
   for temporary implementation plan rules.
@@ -77,12 +84,16 @@ This is a pnpm and Turborepo TypeScript monorepo.
   created by copying and adapting these templates, not by starting from scratch.
 - `packages/eslint-config` and `packages/typescript-config` are shared tooling
   contracts.
+- `config/` holds the tool configs that are passed to their tool by an explicit
+  path: dependency-cruiser, the pre-commit ESLint config, and commitlint. See
+  [structure.md](docs/repository/structure.md#top-level-layout) for which configs
+  stay in the root and why.
 - `packages/ui` is the shared React UI package configured with shadcn and
   Tailwind CSS.
 - `.agents/skills` contains project AI-agent skills committed with their supporting
-  files. They are available immediately after cloning; no skill installation is
-  required. `skills-lock.json` records upstream sources and hashes for explicit
-  updates. See [skills.md](docs/repository/skills.md).
+  files. They are frozen repository content: available immediately after cloning,
+  never downloaded or refreshed by a command, and corrected by editing the text in
+  place. See [skills.md](docs/repository/skills.md).
 - `.agents/plans/` contains temporary, Git-ignored implementation plans. Create
   the directory when needed and delete completed plans after updating permanent
   documentation. See [change workflow](docs/repository/change-workflow.md#temporary-implementation-plans).

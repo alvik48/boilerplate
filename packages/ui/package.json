@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "format": "prettier --write .",
-    "lint": "eslint . --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -37,14 +38,12 @@
   },
   "imports": {
     "#components/*": "./src/components/*.tsx",
-    "#hooks/*": "./src/hooks/*.ts",
     "#lib/*": "./src/lib/*.ts"
   },
   "exports": {
     "./globals.css": "./src/styles/globals.css",
     "./styles.css": "./src/styles/globals.css",
     "./components/*": "./src/components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts",
     "./lib/*": "./src/lib/*.ts",
     "./themes/*": "./src/themes/*.css"
   }

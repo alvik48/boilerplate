@@ -21,19 +21,41 @@ for the current task.
 
 ## Task Matrix
 
-| Task                        | Load these files                                                                                                         |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Understand repository shape | [structure.md](structure.md), [development-rules.md](development-rules.md)                                               |
-| Run commands or debug Turbo | [commands.md](commands.md), [quality.md](quality.md)                                                                     |
-| Create an app/package       | [templates.md](templates.md), [structure.md](structure.md), [env.md](env.md)                                             |
-| Backend/NestJS work         | [backend.md](backend.md), [env.md](env.md), [quality.md](quality.md)                                                     |
-| Frontend/Next.js work       | [frontend.md](frontend.md), [quality.md](quality.md), [mcp-servers.md](mcp-servers.md)                                   |
-| Shared UI work              | [frontend.md](frontend.md), [skills.md](skills.md), [mcp-servers.md](mcp-servers.md), inspect `packages/ui`              |
-| Database/Prisma work        | [databases.md](databases.md), [env.md](env.md), [quality.md](quality.md)                                                 |
-| Refactor or extend code     | [change-workflow.md](change-workflow.md), [development-rules.md](development-rules.md), [mcp-servers.md](mcp-servers.md) |
-| Plan implementation         | [change-workflow.md](change-workflow.md#temporary-implementation-plans)                                                  |
-| Change an external contract | [documentation.md](documentation.md), [integration index](../integration/README.md), affected integration guides         |
-| Choose AI skills or MCP     | [skills.md](skills.md), [mcp-servers.md](mcp-servers.md)                                                                 |
+> **Every code change loads:** [development-rules.md](development-rules.md),
+> [code-design.md](code-design.md), [quality.md](quality.md). The rows below are
+> additive to that baseline.
+
+| Task                        | Load these files                                                                                                 |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Understand repository shape | [structure.md](structure.md), [development-rules.md](development-rules.md)                                       |
+| Run commands or debug Turbo | [commands.md](commands.md), [quality.md](quality.md)                                                             |
+| Create an app/package       | [templates.md](templates.md), [structure.md](structure.md), [env.md](env.md)                                     |
+| Backend/NestJS work         | [backend.md](backend.md), [env.md](env.md), [quality.md](quality.md)                                             |
+| Frontend/Next.js work       | [frontend.md](frontend.md), [quality.md](quality.md), [mcp-servers.md](mcp-servers.md)                           |
+| Shared UI work              | [frontend.md](frontend.md), [skills.md](skills.md), [mcp-servers.md](mcp-servers.md), inspect `packages/ui`      |
+| Database/Prisma work        | [databases.md](databases.md), [env.md](env.md), [quality.md](quality.md)                                         |
+| Refactor or extend code     | [change-workflow.md](change-workflow.md), [code-design.md](code-design.md), [mcp-servers.md](mcp-servers.md)     |
+| Plan implementation         | [change-workflow.md](change-workflow.md#temporary-implementation-plans)                                          |
+| Change an external contract | [documentation.md](documentation.md), [integration index](../integration/README.md), affected integration guides |
+| Choose AI skills or MCP     | [skills.md](skills.md), [mcp-servers.md](mcp-servers.md)                                                         |
+
+## Path-Based Routing
+
+The matrix above keys off how a task is described, which fails when the request
+names no architecture at all — "добавь фильтр пользователей" matches no row.
+Route by the paths the change actually touches:
+
+| Touched path                                                                            | Also load                                            | Skills                                                                                           |
+| --------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `apps/backend.*/**`, `templates/apps.backend/**`                                        | [backend.md](backend.md)                             | `nestjs-best-practices`, `node` (as edited — see [skills.md](skills.md#origins-and-local-edits)) |
+| `apps/frontend.*/**`, `templates/apps.frontend/**`                                      | [frontend.md](frontend.md)                           | `next-cache-components-*`, `next-devtools` MCP                                                   |
+| `packages/ui/**`                                                                        | [frontend.md](frontend.md)                           | `shadcn`, `frontend-design`                                                                      |
+| `packages/db-*/**`, `**/*.prisma`                                                       | [databases.md](databases.md), [env.md](env.md)       | `prisma-client-api`, `prisma-cli`                                                                |
+| `packages/eslint-config/**`, `packages/typescript-config/**`, `turbo.json`, `config/**` | [quality.md](quality.md), [commands.md](commands.md) | `turborepo`                                                                                      |
+| `docs/integration/**`, any external contract                                            | [documentation.md](documentation.md)                 | —                                                                                                |
+
+Rows are additive to the baseline above, and to each other: a change touching a
+backend app and a DB package loads both.
 
 ## Documentation Rules
 
@@ -58,9 +80,12 @@ for the current task.
 - Templates: `templates/apps.backend`, `templates/apps.frontend`,
   `templates/packages.db`.
 - Shared configs: `packages/eslint-config`, `packages/typescript-config`.
+- Relocated tool configs: `config/dependency-cruiser.cjs`,
+  `config/eslint.config.fast.mjs`, `config/commitlint.config.js`. Each is passed
+  by explicit path from its caller.
 - Shared UI: `packages/ui`.
-- Project skill source metadata and hashes: `skills-lock.json`.
-- Vendored project skills, available after cloning: `.agents/skills/*`.
+- Project skills, frozen in Git and available after cloning: `.agents/skills/*`.
+  Origins are recorded in [skills.md](skills.md#origins-and-local-edits).
 - MCP server config: `.mcp.json`.
 
 ## Template Placeholders

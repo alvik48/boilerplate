@@ -1,6 +1,6 @@
 ---
 name: node
-description: Provides domain-specific best practices for Node.js development with TypeScript, covering type stripping, async patterns, error handling, streams, modules, testing, performance, caching, logging, and more. Use when setting up Node.js projects with native TypeScript support, configuring type stripping (--experimental-strip-types), writing Node 22+ TypeScript without a build step, or when the user mentions 'native TypeScript in Node', 'strip types', 'Node 22 TypeScript', '.ts files without compilation', 'ts-node alternative', or needs guidance on error handling, graceful shutdown, flaky tests, profiling, or environment configuration in Node.js. Helps configure tsconfig.json for type stripping, set up package.json scripts, handle module resolution and import extensions, and apply robust patterns across the full Node.js stack.
+description: Provides domain-specific best practices for Node.js development with TypeScript, covering async patterns, error handling, streams, modules, testing, performance, caching, logging, and more. Use when working on standalone Node.js scripts, CLI tooling, or plain Node services, or when the user needs guidance on error handling, graceful shutdown, flaky tests, profiling, or environment configuration in Node.js. Type-stripping guidance is scoped to standalone scripts and tooling; do NOT apply it to framework applications that compile through their own toolchain (NestJS via `nest build`, Next.js, bundled libraries), which need a real transform for decorator metadata and emit. Helps set up package.json scripts, handle module resolution and import extensions, and apply robust patterns across the full Node.js stack.
 metadata:
   tags: node, nodejs, javascript, typescript, type-stripping, backend, server
 ---
@@ -11,7 +11,17 @@ Use this skill whenever you are dealing with Node.js code to obtain domain-speci
 
 ## TypeScript with Type Stripping
 
-When writing TypeScript for Node.js, use **type stripping** (Node.js 22.6+) instead of build tools like ts-node or tsx. Type stripping runs TypeScript directly by removing type annotations at runtime without transpilation.
+<!-- LOCAL EDIT — upstream prescribed type stripping for Node TypeScript generally,
+     here and in the activation `description` above. Scoped to standalone scripts and
+     tooling. See docs/repository/skills.md#editing-a-skill. -->
+
+For **standalone scripts and tooling**, prefer **type stripping** (Node.js 22.6+) over build tools like ts-node or tsx. Type stripping runs TypeScript directly by removing type annotations at runtime without transpilation.
+
+This does not apply to applications compiled by a framework toolchain. Type
+stripping erases annotations without transforming them, so anything that needs a
+real transform must keep its build step — most importantly `emitDecoratorMetadata`,
+which NestJS depends on for dependency injection and which `nest build` performs.
+Do not propose replacing `nest build`, `next build`, or a library bundler with it.
 
 Key requirements for type stripping compatibility:
 - Use `import type` for type-only imports

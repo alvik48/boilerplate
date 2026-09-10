@@ -25,8 +25,10 @@ pnpm build
 pnpm dev
 pnpm format
 pnpm lint
+pnpm lint:fix
 pnpm test
 pnpm typecheck
+pnpm deps:check
 ```
 
 Root scripts delegate to Turbo:
@@ -35,8 +37,23 @@ Root scripts delegate to Turbo:
 - `dev`: `turbo run dev --parallel`
 - `format`: `turbo run format`
 - `lint`: `turbo run lint`
+- `lint:fix`: `turbo run lint:fix`
 - `test`: `turbo run test`
 - `typecheck`: `turbo run typecheck`
+
+`deps:check` runs dependency-cruiser directly rather than through Turbo: it
+cruises the whole graph from the root in one pass, so a per-package task would
+have nothing to run. See
+[quality.md](quality.md#dependency-graph-checks).
+
+### `lint` Versus `lint:fix`
+
+`lint` is check-only in every package. `lint:fix` is the writing form. Keep them
+separate: a `lint` script that carries `--fix` repairs an auto-fixable violation
+in the runner's working copy and then exits 0, which turns a CI failure into a
+green build over unfixed source.
+
+Use `lint:fix` while developing and `lint` anywhere the exit code is the answer.
 
 ## Filtered Commands
 
@@ -83,45 +100,39 @@ applying committed migrations in CI or production-like environments.
 ## Skill Commands
 
 Project skills and all their supporting files are committed under `.agents/skills`.
-Cloning the repository provides the reviewed versions without an upstream download.
-`skills-lock.json` records skill identities, sources, and hashes for maintenance;
-Git preserves the actual contents.
+Cloning the repository provides the reviewed versions, and Git is the only source
+of their contents.
 
-Current root `package.json` exposes:
-
-```sh
-pnpm skills:list
-pnpm skills:update
-```
-
-`skills:list` lists local skills. `skills:update` runs `skills update --project`
-and downloads upstream versions only for this project's skills. Run it explicitly
-as a dedicated maintenance change, then review and commit `.agents/skills` and
-`skills-lock.json` together. To update one skill:
+Root `package.json` exposes one skill command:
 
 ```sh
-pnpm skills:update shadcn
+pnpm skills:link
 ```
 
-There is no `skills:install` bootstrap step. Recover accidentally deleted skill
-files from Git, not by reinstalling from upstream. The CLI's
-`experimental_install` refreshes contents and hashes from recorded sources; it
-does not restore an immutable snapshot by `computedHash`.
+`skills:link` symlinks `.claude/skills` and `.codex/skills` to `.agents/skills`
+so auto-discovering agents can see them. It runs from `prepare`, so
+`pnpm install` already does it. See [skills.md](skills.md#discoverability).
 
-See [skills.md](skills.md#maintaining-vendored-skills) for adding skills and
-handling removed upstream sources.
+There is no install, update, or patch command. Skills are frozen repository
+content: adding, refreshing, or correcting one is a manual, reviewed edit, not a
+command. Recover accidentally deleted skill files from Git rather than from
+upstream. See [skills.md](skills.md#adding-or-replacing-a-skill) for the
+procedure and [skills.md](skills.md#editing-a-skill) for the rules on editing a
+skill's text.
 
 ## Commit Hooks
 
-Husky pre-commit runs:
+Husky pre-commit runs `lint-staged`: Prettier plus a syntax-only ESLint pass over
+staged files, using `config/eslint.config.fast.mjs`. Type-aware lint,
+typecheck, build and tests run in CI. See
+[quality.md](quality.md#pre-commit-and-commit-messages).
 
 ```sh
-pnpm build
-pnpm lint
+pnpm exec lint-staged
 ```
 
-Commit messages are checked by commitlint and must use a non-empty conventional
-commit scope, for example:
+Commit messages are checked by commitlint against `config/commitlint.config.js`
+and must use a non-empty conventional commit scope, for example:
 
 ```text
 feat(frontend.admin): add dashboard shell

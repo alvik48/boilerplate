@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Turbo prints progress rather than an interactive UI on CI.
+  TURBO_TELEMETRY_DISABLED: 1
+
+jobs:
+  # The type-and-lint signal. Kept separate from the browser job so a Playwright
+  # browser-download outage cannot block it.
+  verify:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      # The version comes from `packageManager` in package.json.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The full graph, not --affected: the repository is small and Turbo caches.
+      # --affected needs TURBO_SCM_BASE wiring and can wait until it pays.
+      #
+      # `lint` is check-only in every package (see docs/repository/quality.md), so
+      # a green run here means the source is clean rather than that ESLint
+      # repaired it in the runner's working copy and exited 0.
+      - run: pnpm exec turbo run lint typecheck test build
+
+      - name: Dependency graph rules
+        run: pnpm deps:check
+
+      - name: Documentation coverage and parity
+        run: pnpm docs:check
+
+      # A green build must not depend on an autofix having been applied here.
+      - name: Fail if the build modified tracked files
+        run: git diff --exit-code
+
+  # `turbo run test` does NOT imply test:browser -- they are separate tasks. Without
+  # this job the Playwright suites would never run.
+  browser:
+    name: Browser tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Run from a package that actually depends on @playwright/test -- the root
+      # does not, so a bare `pnpm exec playwright` there fails to resolve. Both
+      # Playwright consumers pin the same version and share one browser cache, so
+      # installing once covers them.
+      - name: Install Playwright browser
+        run: pnpm --filter @apps/frontend.docs exec playwright install --with-deps chromium
+
+      - run: pnpm exec turbo run test:browser
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            **/playwright-report/
+            **/test-results/
+          retention-days: 7

@@ -4,6 +4,10 @@ Read `README.md` first. It is the source of truth for project architecture,
 commands, API contracts, database workflow, and shared AI-agent development
 rules.
 
+For any code change the baseline documents listed there are mandatory, and the
+links must actually be opened — nested instruction files are not loaded
+automatically. State which documents and skills you loaded before editing.
+
 ## Codex
 
 - This file exists because Codex loads `AGENTS.md`; shared project guidance

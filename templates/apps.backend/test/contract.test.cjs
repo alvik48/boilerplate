@@ -25,3 +25,38 @@ test('runtime JSON and actual health response match the offline artifact, includ
     await app.close();
   }
 });
+
+test('the users route matches its contract, filters by status, and rejects an unknown one', async () => {
+  const app = await createApp();
+  const spec = JSON.parse(await readFile('generated/openapi.json', 'utf8'));
+  const schema = spec.paths['/users'].get.responses['200'].content['application/json'].schema;
+  try {
+    await app.listen(0, '127.0.0.1');
+    const url = await app.getUrl();
+
+    const all = await fetch(url + '/users');
+    assert.equal(all.status, 200);
+    const users = await all.json();
+    validateExample(spec, schema, users);
+    // The seed is offset-based, so one user resolves to each status regardless
+    // of when the template is run.
+    assert.deepEqual(
+      users.map((user) => user.status).sort(),
+      ['active', 'dormant', 'idle', 'suspended'],
+    );
+
+    const active = await fetch(url + '/users?status=active');
+    assert.equal(active.status, 200);
+    const activeUsers = await active.json();
+    validateExample(spec, schema, activeUsers);
+    assert.deepEqual(
+      activeUsers.map((user) => user.id),
+      ['u_1'],
+    );
+
+    // ParseEnumPipe rejects a value outside the documented enum.
+    assert.equal((await fetch(url + '/users?status=nonsense')).status, 400);
+  } finally {
+    await app.close();
+  }
+});

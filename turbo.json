@@ -14,6 +14,16 @@
       "outputs": []
     },
     "lint": {
+      "outputs": [],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/eslint-config/*.mjs",
+        "$TURBO_ROOT$/packages/eslint-config/rules/**",
+        "$TURBO_ROOT$/packages/eslint-config/package.json"
+      ]
+    },
+    "lint:fix": {
+      "cache": false,
       "outputs": []
     },
     "start": {
@@ -36,7 +46,8 @@
     },
     "typecheck": {
       "dependsOn": ["^typecheck"],
-      "outputs": []
+      "outputs": [],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/typescript-config/*.json"]
     },
     "openapi:generate": {
       "dependsOn": ["build"],
@@ -118,6 +129,7 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "!next-env.d.ts",
+        "$TURBO_ROOT$/packages/typescript-config/*.json",
         "$TURBO_ROOT$/docs/**",
         "$TURBO_ROOT$/README.md",
         "$TURBO_ROOT$/turbo.json",
@@ -149,11 +161,19 @@
       "env": ["DOCS_ORIGIN", "DOCS_SOURCE_URL", "DOCS_API_BACKEND_TEMPLATE_URL", "DOCS_REVISION"],
       "outputs": []
     },
+    "@apps/frontend.docs#lint:fix": {
+      "dependsOn": ["docs:prepare"],
+      "cache": false,
+      "outputs": []
+    },
     "@apps/frontend.docs#lint": {
       "dependsOn": ["docs:prepare"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!next-env.d.ts",
+        "$TURBO_ROOT$/packages/eslint-config/*.mjs",
+        "$TURBO_ROOT$/packages/eslint-config/rules/**",
+        "$TURBO_ROOT$/packages/eslint-config/package.json",
         "$TURBO_ROOT$/docs/**",
         "$TURBO_ROOT$/README.md",
         "$TURBO_ROOT$/turbo.json",
@@ -196,6 +216,11 @@
       "dependsOn": ["build"],
       "outputs": []
     },
+    "@packages/api-contracts#lint:fix": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "outputs": []
+    },
     "@packages/docs-core#test": {
       "dependsOn": ["build"],
       "outputs": []
@@ -206,6 +231,11 @@
     },
     "@packages/docs-core#lint": {
       "dependsOn": ["build"],
+      "outputs": []
+    },
+    "@packages/docs-core#lint:fix": {
+      "dependsOn": ["build"],
+      "cache": false,
       "outputs": []
     },
     "@packages/mcp#test": {
@@ -220,11 +250,20 @@
       "dependsOn": ["build"],
       "outputs": []
     },
+    "@packages/mcp#lint:fix": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "outputs": []
+    },
     "@apps/backend-template#test": {
       "dependsOn": ["openapi:check"],
       "outputs": []
     },
     "test:browser": {
+      "cache": false,
+      "outputs": ["test-results/**", "playwright-report/**"]
+    },
+    "@apps/frontend.docs#test:browser": {
       "dependsOn": ["docs:prepare"],
       "cache": false,
       "outputs": ["test-results/**", "playwright-report/**"]

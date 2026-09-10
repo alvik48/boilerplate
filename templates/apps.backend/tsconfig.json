@@ -2,6 +2,9 @@
   "extends": "@packages/typescript-config/nest.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "."
+    "rootDir": ".",
+    // Explicit because `*.spec.ts` files are part of the typecheck program (only
+    // tsconfig.build.json excludes them) and need Jest's globals.
+    "types": ["node", "jest"]
   }
 }
