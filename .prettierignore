@@ -1,2 +1,9 @@
-# Preserve vendored skill contents and their recorded source hashes.
+# Third-party skill texts are edited deliberately and reviewed as prose, not
+# reformatted. Repository-wide Prettier runs would rewrite them wholesale and
+# bury the local edits.
 /.agents/skills/
+
+# Generated output owned by pnpm, which rewrites it in its own compact style on
+# every install. Formatting it here makes the two tools fight and turns any
+# install followed by a commit into a several-thousand-line phantom diff.
+/pnpm-lock.yaml
