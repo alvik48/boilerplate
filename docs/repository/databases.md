@@ -48,6 +48,24 @@ packages/db-<name>/
 
 `generated/` is ignored and must be recreated with `prisma:generate`.
 
+Because `src/**` imports that output, every task whose TypeScript program covers
+`src/**` declares `prisma:generate` in `dependsOn` in the package's `turbo.json`:
+`build`, `typecheck`, and the type-aware `lint`. Wiring it into `build` alone is
+not enough — Turbo is then free to start `typecheck` before the generator has
+run, and a clean checkout fails with
+`TS2307: Cannot find module '../generated/prisma/client.js'`.
+
+Write the dependency as `["$TURBO_EXTENDS$", "prisma:generate"]`. In a Package
+Configuration an explicitly declared array **replaces** the inherited one, so a
+bare `["prisma:generate"]` silently drops the root `^build` / `^typecheck`;
+`$TURBO_EXTENDS$` appends instead. Fields the package does not declare at all are
+still inherited, so `inputs` need no repetition here — unlike a root-level
+`package#task` entry, which replaces the generic entry wholesale. See
+[quality.md](quality.md#cache-invalidation).
+
+`prisma generate` reads only `prisma/schema.prisma`; it needs no reachable
+database and no `POSTGRES_URL`, which is what makes this safe to run in CI.
+
 ## Prisma Commands
 
 ```sh

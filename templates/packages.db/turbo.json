@@ -3,12 +3,20 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["prisma:generate"],
+      "dependsOn": ["$TURBO_EXTENDS$", "prisma:generate"],
       "env": ["POSTGRES_URL"],
       "outputs": ["dist/**"]
     },
+    // `src/**` imports the generated client, which is gitignored. Every task that
+    // reads those types needs `prisma:generate` first, or it races the generator
+    // on a clean checkout and fails with TS2307. `$TURBO_EXTENDS$` appends to the
+    // root `dependsOn` instead of replacing it, so `^build`/`^typecheck` survive.
     "lint": {
+      "dependsOn": ["$TURBO_EXTENDS$", "prisma:generate"],
       "env": ["POSTGRES_URL"]
+    },
+    "typecheck": {
+      "dependsOn": ["$TURBO_EXTENDS$", "prisma:generate"]
     },
     "test": {
       "dependsOn": ["build"],
