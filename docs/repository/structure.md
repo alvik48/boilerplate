@@ -55,6 +55,11 @@ flag, and relocating them would break resolution rather than tidy it:
 | `turbo.json`           | Fixed name at the workspace root                                        |
 | `pnpm-workspace.yaml`  | Fixed name at the workspace root                                        |
 
+The root `turbo.json` also has to stay strict JSON, unlike
+`templates/packages.db/turbo.json`, because the docs inventory check parses it
+with `JSON.parse`. See
+[comments in `turbo.json`](quality.md#comments-in-turbojson).
+
 `pnpm-workspace.yaml` includes:
 
 ```yaml

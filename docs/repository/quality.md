@@ -233,6 +233,36 @@ Note that a package-specific task entry such as `@apps/frontend.docs#lint`
 **replaces** the generic entry rather than merging with it, so its `inputs` must
 repeat the shared-config paths.
 
+### Comments In `turbo.json`
+
+The root `turbo.json` must be strict JSON. `apps/frontend.docs/scripts/inventory.ts`
+reads it with `JSON.parse` to check that every HTTP service has an
+`#openapi:check` edge on `@apps/frontend.docs#docs:generate`, and `JSON.parse`
+rejects comments.
+
+Turbo itself accepts JSONC, so the constraint is invisible until it fires.
+`templates/packages.db/turbo.json` does carry `//` comments and works fine —
+Turbo is its only reader. The root file is the one with a second, stricter
+consumer.
+
+A single `//` line there fails **every** root gate that reaches the docs app —
+`lint`, `typecheck`, `build`, `docs:generate` and `docs:check` — all attributed
+to one task, because `docs:prepare` → `docs:generate` sits upstream of the docs
+app's lint, typecheck and build entries:
+
+```text
+@apps/frontend.docs:docs:generate: SyntaxError: Expected double-quoted property name in JSON at position 312 (line 16 column 5)
+@apps/frontend.docs:docs:generate:     at validateInventory (apps/frontend.docs/scripts/inventory.ts:26:17)
+```
+
+The message names no file, and the failing task is a docs task, so a build-config
+typo reads as a docs bug. The exact wording varies with where the comment sits,
+but the reported line and column are always offsets into `turbo.json` — resolve
+them there, not in the docs app.
+
+Task wiring that needs an explanation gets it in this document, next to the rest
+of the wiring rules, rather than in a comment.
+
 ## Typechecking
 
 Run:
