@@ -7,9 +7,20 @@
  * resolves modules, so it can also follow aliases (`@/...`) and re-export chains
  * rather than string-matching them.
  *
+ * Run this from the repository root, which `pnpm deps:check` does. Every path
+ * here — the rule regexes, `options.exclude`, and the workspace scan below — is
+ * resolved against the CWD, not against this file's directory. Only `extends`
+ * would be relative to this file.
+ *
  * See docs/repository/quality.md, "Dependency Graph Checks".
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports --
+ * dependency-cruiser loads this file through `require`, so it must stay
+ * CommonJS, and `.cjs` cannot use `import`. The rule asks for a shape the
+ * extension forbids. Kept file-scoped rather than exempted repo-wide: this is
+ * the only linted `.cjs` in the tree that calls `require`.
+ */
 const { readdirSync, readFileSync, existsSync } = require('node:fs');
 const { join } = require('node:path');
 
@@ -41,7 +52,9 @@ const packageExportEntryPatterns = () => {
 
       const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 
-      for (const target of JSON.stringify(manifest.exports ?? {}).matchAll(/\.\/(?:dist\/)?(?:src\/)?([\w./-]+?)\.(?:js|ts|tsx|mjs|cjs)/g)) {
+      for (const target of JSON.stringify(manifest.exports ?? {}).matchAll(
+        /\.\/(?:dist\/)?(?:src\/)?([\w./-]+?)\.(?:js|ts|tsx|mjs|cjs)/g,
+      )) {
         patterns.add(`${workspace}/${entry.name}/src/${target[1]}\\.tsx?$`);
       }
     }

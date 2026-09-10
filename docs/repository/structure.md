@@ -11,15 +11,17 @@ audience: [developer, agent]
 ## Top-Level Layout
 
 ```text
-.agents/skills/            project AI-agent skills and supporting files
-.agents/plans/             temporary local implementation plans, ignored by Git
-apps/                     deployable applications
-packages/                 shared libraries, tooling configs, database packages
-templates/                canonical source templates for new apps/packages
-docs/repository/          AI-ready development documentation
-docs/integration/         external client and agent integration guidance
-docs/                     permanent project documentation and guides
-scripts/                  repository automation, currently empty
+.agents/skills/     project AI-agent skills and supporting files
+.agents/plans/      temporary local implementation plans, ignored by Git
+apps/               deployable applications
+packages/           shared libraries, tooling configs, database packages
+templates/          canonical source templates for new apps/packages
+config/             tool configs that can be relocated out of the root
+bin/                repository automation shell scripts
+infra/              local infrastructure compose files
+docs/repository/    AI-ready development documentation
+docs/integration/   external client and agent integration guidance
+docs/               permanent project documentation and guides
 ```
 
 `.agents/skills` is versioned, hand-maintained content, not generated output and
@@ -36,6 +38,22 @@ and required updates when external contracts change.
 are local to the checkout and are not transferred by Git to other clones or
 worktrees. See [change workflow](change-workflow.md#temporary-implementation-plans)
 for naming, progress updates, and cleanup rules.
+
+`config/` holds the tool configs whose consumer passes an explicit path, so the
+location is free: `dependency-cruiser.cjs` (`pnpm deps:check`),
+`eslint.config.fast.mjs` (lint-staged, with `--no-config-lookup`), and
+`commitlint.config.js` (the `commit-msg` hook). Moving one of these means
+updating its caller in the same change — nothing discovers them by convention.
+
+The rest stay in the root because their tools resolve them by position, not by
+flag, and relocating them would break resolution rather than tidy it:
+
+| File                   | Why it cannot move                                                      |
+| ---------------------- | ----------------------------------------------------------------------- |
+| `.prettierrc`          | Prettier searches ancestors of each formatted file                      |
+| `ecosystem.config.cjs` | PM2 resolves each app's relative `cwd` against the config file's folder |
+| `turbo.json`           | Fixed name at the workspace root                                        |
+| `pnpm-workspace.yaml`  | Fixed name at the workspace root                                        |
 
 `pnpm-workspace.yaml` includes:
 

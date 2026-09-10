@@ -184,7 +184,7 @@ pnpm deps:check
 ```
 
 Runs dependency-cruiser over `apps packages templates` against
-`.dependency-cruiser.cjs`. It carries the rules ESLint provably cannot express,
+`config/dependency-cruiser.cjs`. It carries the rules ESLint provably cannot express,
 because `no-restricted-imports` sees only the import string and never the
 importing file's location:
 
@@ -327,7 +327,7 @@ the generated `.source` types — measured, ESLint on `src/lib/source.ts` exits 
 with `.source` present and 1 without it. So the fix is to split the **rule set**,
 not the file list.
 
-`@packages/eslint-config/fast` (via root `eslint.config.fast.mjs`) drops the
+`@packages/eslint-config/fast` (via `config/eslint.config.fast.mjs`) drops the
 `typescript-eslint` type-checked rules and keeps everything decidable from the
 AST — including the import boundaries and `architecture/thin-controller`, neither
 of which needs type information. Type-aware lint, `typecheck`, `build`, `test`

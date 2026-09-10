@@ -84,6 +84,10 @@ This is a pnpm and Turborepo TypeScript monorepo.
   created by copying and adapting these templates, not by starting from scratch.
 - `packages/eslint-config` and `packages/typescript-config` are shared tooling
   contracts.
+- `config/` holds the tool configs that are passed to their tool by an explicit
+  path: dependency-cruiser, the pre-commit ESLint config, and commitlint. See
+  [structure.md](docs/repository/structure.md#top-level-layout) for which configs
+  stay in the root and why.
 - `packages/ui` is the shared React UI package configured with shadcn and
   Tailwind CSS.
 - `.agents/skills` contains project AI-agent skills committed with their supporting

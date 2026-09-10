@@ -123,7 +123,7 @@ skill's text.
 ## Commit Hooks
 
 Husky pre-commit runs `lint-staged`: Prettier plus a syntax-only ESLint pass over
-staged files, using the root `eslint.config.fast.mjs`. Type-aware lint,
+staged files, using `config/eslint.config.fast.mjs`. Type-aware lint,
 typecheck, build and tests run in CI. See
 [quality.md](quality.md#pre-commit-and-commit-messages).
 
@@ -131,8 +131,8 @@ typecheck, build and tests run in CI. See
 pnpm exec lint-staged
 ```
 
-Commit messages are checked by commitlint and must use a non-empty conventional
-commit scope, for example:
+Commit messages are checked by commitlint against `config/commitlint.config.js`
+and must use a non-empty conventional commit scope, for example:
 
 ```text
 feat(frontend.admin): add dashboard shell

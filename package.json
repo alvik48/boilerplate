@@ -13,7 +13,7 @@
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "deps:check": "depcruise --config .dependency-cruiser.cjs apps packages templates",
+    "deps:check": "depcruise --config config/dependency-cruiser.cjs apps packages templates",
     "openapi:generate": "turbo run openapi:generate",
     "openapi:check": "turbo run openapi:check",
     "docs:generate": "turbo run docs:generate",
@@ -39,7 +39,7 @@
   "lint-staged": {
     "*.{ts,tsx,mts,cts,mjs,cjs,js,jsx}": [
       "prettier --write",
-      "eslint --config eslint.config.fast.mjs --no-config-lookup --no-warn-ignored"
+      "eslint --config config/eslint.config.fast.mjs --no-config-lookup --no-warn-ignored"
     ],
     "*.{json,md,css,yml,yaml}": [
       "prettier --write"
