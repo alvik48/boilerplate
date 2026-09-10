@@ -20,6 +20,10 @@ Reference these guidelines when:
 - Refactoring existing React/Next.js code
 - Optimizing bundle size or load times
 
+<!-- LOCAL EDIT — upstream presents all eight categories as unconditional. The
+     paragraphs below gate categories 5-8 on a measurement. See
+     docs/repository/skills.md#editing-a-skill. -->
+
 **This repository gates categories 5-8 on measurement.** Categories 1-4
 (`async-`, `bundle-`, `server-`, `client-`) are structural: they remove round
 trips and shipped bytes, so apply them by default. Categories 5-8 (`rerender-`,

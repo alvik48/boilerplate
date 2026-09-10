@@ -11,6 +11,10 @@ Use this skill whenever you are dealing with Node.js code to obtain domain-speci
 
 ## TypeScript with Type Stripping
 
+<!-- LOCAL EDIT — upstream prescribed type stripping for Node TypeScript generally,
+     here and in the activation `description` above. Scoped to standalone scripts and
+     tooling. See docs/repository/skills.md#editing-a-skill. -->
+
 For **standalone scripts and tooling**, prefer **type stripping** (Node.js 22.6+) over build tools like ts-node or tsx. Type stripping runs TypeScript directly by removing type annotations at runtime without transpilation.
 
 This does not apply to applications compiled by a framework toolchain. Type

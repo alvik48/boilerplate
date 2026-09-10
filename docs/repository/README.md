@@ -45,14 +45,14 @@ The matrix above keys off how a task is described, which fails when the request
 names no architecture at all — "добавь фильтр пользователей" matches no row.
 Route by the paths the change actually touches:
 
-| Touched path                                                               | Also load                                            | Skills                                                                                                |
-| -------------------------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `apps/backend.*/**`, `templates/apps.backend/**`                           | [backend.md](backend.md)                             | `nestjs-best-practices`, `node` (as patched — see [skills.md](skills.md#correcting-a-vendored-skill)) |
-| `apps/frontend.*/**`, `templates/apps.frontend/**`                         | [frontend.md](frontend.md)                           | `next-cache-components-*`, `next-devtools` MCP                                                        |
-| `packages/ui/**`                                                           | [frontend.md](frontend.md)                           | `shadcn`, `frontend-design`                                                                           |
-| `packages/db-*/**`, `**/*.prisma`                                          | [databases.md](databases.md), [env.md](env.md)       | `prisma-client-api`, `prisma-cli`                                                                     |
-| `packages/eslint-config/**`, `packages/typescript-config/**`, `turbo.json` | [quality.md](quality.md), [commands.md](commands.md) | `turborepo`                                                                                           |
-| `docs/integration/**`, any external contract                               | [documentation.md](documentation.md)                 | —                                                                                                     |
+| Touched path                                                               | Also load                                            | Skills                                                                                           |
+| -------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `apps/backend.*/**`, `templates/apps.backend/**`                           | [backend.md](backend.md)                             | `nestjs-best-practices`, `node` (as edited — see [skills.md](skills.md#origins-and-local-edits)) |
+| `apps/frontend.*/**`, `templates/apps.frontend/**`                         | [frontend.md](frontend.md)                           | `next-cache-components-*`, `next-devtools` MCP                                                   |
+| `packages/ui/**`                                                           | [frontend.md](frontend.md)                           | `shadcn`, `frontend-design`                                                                      |
+| `packages/db-*/**`, `**/*.prisma`                                          | [databases.md](databases.md), [env.md](env.md)       | `prisma-client-api`, `prisma-cli`                                                                |
+| `packages/eslint-config/**`, `packages/typescript-config/**`, `turbo.json` | [quality.md](quality.md), [commands.md](commands.md) | `turborepo`                                                                                      |
+| `docs/integration/**`, any external contract                               | [documentation.md](documentation.md)                 | —                                                                                                |
 
 Rows are additive to the baseline above, and to each other: a change touching a
 backend app and a DB package loads both.
@@ -81,8 +81,8 @@ backend app and a DB package loads both.
   `templates/packages.db`.
 - Shared configs: `packages/eslint-config`, `packages/typescript-config`.
 - Shared UI: `packages/ui`.
-- Project skill source metadata and hashes: `skills-lock.json`.
-- Vendored project skills, available after cloning: `.agents/skills/*`.
+- Project skills, frozen in Git and available after cloning: `.agents/skills/*`.
+  Origins are recorded in [skills.md](skills.md#origins-and-local-edits).
 - MCP server config: `.mcp.json`.
 
 ## Template Placeholders

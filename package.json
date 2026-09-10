@@ -11,8 +11,6 @@
     "format": "turbo run format",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
-    "skills:list": "pnpm exec skills list",
-    "skills:update": "bin/update-skills.sh",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "deps:check": "depcruise --config .dependency-cruiser.cjs apps packages templates",
@@ -34,7 +32,6 @@
     "lint-staged": "^17.5.0",
     "prettier": "catalog:",
     "shadcn": "catalog:",
-    "skills": "^1.5.25",
     "turbo": "^2.10.12",
     "typescript": "catalog:",
     "eslint": "catalog:"

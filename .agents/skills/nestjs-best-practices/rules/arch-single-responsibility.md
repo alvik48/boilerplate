@@ -47,6 +47,11 @@ export class UserAndOrderService {
 
 **Correct (focused services with single responsibility):**
 
+<!-- LOCAL EDIT — upstream put the create-order sequence in the controller. Rewritten
+     to a CreateOrderUseCase with the controller making one call, per
+     docs/repository/backend.md#the-orchestration-rule. See
+     docs/repository/skills.md#editing-a-skill. -->
+
 ```typescript
 // Focused services with single responsibility
 @Injectable()

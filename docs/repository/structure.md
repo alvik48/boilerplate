@@ -11,7 +11,7 @@ audience: [developer, agent]
 ## Top-Level Layout
 
 ```text
-.agents/skills/            vendored project AI-agent skills and supporting files
+.agents/skills/            project AI-agent skills and supporting files
 .agents/plans/             temporary local implementation plans, ignored by Git
 apps/                     deployable applications
 packages/                 shared libraries, tooling configs, database packages
@@ -22,9 +22,10 @@ docs/                     permanent project documentation and guides
 scripts/                  repository automation, currently empty
 ```
 
-`.agents/skills` is versioned, not generated output. `skills-lock.json` records
-upstream source metadata for explicit updates; a clone already includes the skill
-files. See [skills.md](skills.md) for maintenance rules.
+`.agents/skills` is versioned, hand-maintained content, not generated output and
+not fetched by any command. Origins are recorded in
+[skills.md](skills.md#origins-and-local-edits), which also holds the rules for
+editing a skill.
 
 `docs/integration/` owns consumer-facing guides; `docs/repository/` owns development
 rules. The Fumadocs app `apps/frontend.docs` publishes API references and the public

@@ -100,15 +100,12 @@ applying committed migrations in CI or production-like environments.
 ## Skill Commands
 
 Project skills and all their supporting files are committed under `.agents/skills`.
-Cloning the repository provides the reviewed versions without an upstream download.
-`skills-lock.json` records skill identities, sources, and hashes for maintenance;
-Git preserves the actual contents.
+Cloning the repository provides the reviewed versions, and Git is the only source
+of their contents.
 
-Current root `package.json` exposes:
+Root `package.json` exposes one skill command:
 
 ```sh
-pnpm skills:list
-pnpm skills:update
 pnpm skills:link
 ```
 
@@ -116,27 +113,12 @@ pnpm skills:link
 so auto-discovering agents can see them. It runs from `prepare`, so
 `pnpm install` already does it. See [skills.md](skills.md#discoverability).
 
-`skills:list` lists local skills. `skills:update` runs `bin/update-skills.sh`,
-which downloads upstream versions for this project's skills and then re-applies
-every correction under `patches/skills/`. Run it explicitly as a dedicated
-maintenance change, then review and commit `.agents/skills`, any patches, and
-`skills-lock.json` together. To update one skill:
-
-```sh
-pnpm skills:update shadcn
-```
-
-A patch that no longer applies fails the whole command instead of being silently
-dropped. Re-derive it with `bin/edit-skill.sh`; see
-[skills.md](skills.md#correcting-a-vendored-skill).
-
-There is no `skills:install` bootstrap step. Recover accidentally deleted skill
-files from Git, not by reinstalling from upstream. The CLI's
-`experimental_install` refreshes contents and hashes from recorded sources; it
-does not restore an immutable snapshot by `computedHash`.
-
-See [skills.md](skills.md#maintaining-vendored-skills) for adding skills and
-handling removed upstream sources.
+There is no install, update, or patch command. Skills are frozen repository
+content: adding, refreshing, or correcting one is a manual, reviewed edit, not a
+command. Recover accidentally deleted skill files from Git rather than from
+upstream. See [skills.md](skills.md#adding-or-replacing-a-skill) for the
+procedure and [skills.md](skills.md#editing-a-skill) for the rules on editing a
+skill's text.
 
 ## Commit Hooks
 
