@@ -52,6 +52,14 @@ package follows this split, so a `lint` exit code means what it says.
 Do not add `--fix` back into a `lint` script. ESLint repairs the violation in the
 working copy and exits 0, so CI reports success over source that was never fixed.
 
+The root `lint` task declares `dependsOn: ["^build"]`. Type-aware rules resolve a
+workspace import through the dependency's `types` entry, which points into its
+`dist/`, so linting a package before its dependencies are built reports
+`no-unsafe-call` and `no-unsafe-assignment` against types ESLint could not
+resolve. This only ever fails on a clean checkout — locally a stale `dist/` from
+an earlier build hides it. It is the lint-time twin of the generator race
+described in [databases.md](databases.md).
+
 Shared ESLint configs live in `packages/eslint-config`:
 
 - `@packages/eslint-config/base`.
@@ -208,10 +216,12 @@ stale without anyone noticing. This is not automatic: `lint` and `typecheck`
 declare explicit `inputs` pointing at `packages/eslint-config` and
 `packages/typescript-config` respectively.
 
-Without them, packages whose `lint` does not depend on a `build` task —
-`@packages/ui`, both app templates, the DB template — stayed cache HITs after a
-`base.mjs` edit and silently skipped the new rules. Verify after changing task
-wiring:
+Without them, `@packages/ui`, both app templates and the DB template stayed cache
+HITs after a `base.mjs` edit and silently skipped the new rules. No `dependsOn`
+edge can substitute: neither `packages/eslint-config` nor
+`packages/typescript-config` has a `build` script, so nothing carries an edit to
+either into a dependent task's hash. `^build` on `lint` orders the tasks; only
+`inputs` invalidate them. Verify after changing task wiring:
 
 ```sh
 pnpm lint                                    # warm the cache
@@ -389,6 +399,13 @@ runtime JSON to the offline contract; MCP tests cover SDK transport and authoriz
 mobile layout, real health requests, an authenticated body/error fixture, credential
 nonpersistence, and root Markdown hot reload. It needs Playwright Chromium installed.
 The fixture route is development-only and omitted from all public discovery surfaces.
+
+The suite runs against `next dev`, which compiles each route on its first request.
+`page.goto` absorbs that compile inside its own navigation wait, so a route reached
+by navigation needs nothing extra. A route reached by client-side `fetch` does not:
+give those assertions an explicit `{ timeout: 30000 }`. Playwright's default `expect`
+timeout is 5s, and the first `/api/search` hit was measured at 4.5s on a CI runner —
+green on a warm local `.next`, red on a clean checkout.
 
 Always review behavioral compatibility and prose accuracy, even when coverage checks
 pass. Run root Markdown formatting explicitly as described in [commands](commands.md).

@@ -17,9 +17,13 @@ test('desktop and mobile sections, normalized links and scoped search', async ({
   await expect(page.getByRole('heading', { name: 'Integration guide', exact: true })).toBeVisible();
   await page.getByLabel('Search documentation', { exact: true }).fill('health');
   await page.getByLabel('Search scope').selectOption('integration');
+  // `/api/search` is the one route this suite reaches by client-side fetch rather
+  // than by navigation, so its first-hit dev compile lands inside this wait
+  // instead of inside a `page.goto`. Measured at 4.5s on a CI runner, against the
+  // 5s default expect timeout.
   await expect(
     page.locator('.docs-search-results').getByRole('link', { name: 'Local health example' }).first(),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 30000 });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: 'Open Sidebar', exact: true }).click();
   await page.getByRole('button', { name: 'Integration', exact: true }).click();
