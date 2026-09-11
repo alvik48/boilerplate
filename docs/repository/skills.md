@@ -19,15 +19,21 @@ originated upstream, but this repository now owns it and edits it in place.
 
 ## Discoverability
 
-Agents that auto-discover skills read their own directory — Claude Code uses
-`.claude/skills`, Codex `.codex/skills` — not `.agents/skills`. Without a link,
-the skills are present but never offered.
+Claude Code auto-discovers skills from its own directory, `.claude/skills`, and
+not from `.agents/skills`. Without a link, the skills are present but never
+offered.
 
-`bin/link-agent-skills.sh` symlinks both to `../.agents/skills`. It runs from the
+Codex needs no link. It scans `.agents/skills` natively — in every directory from
+the working directory up to the repository root, then `$HOME/.agents/skills` and
+`/etc/codex/skills` — and does not read `.codex/skills` at all. That link is kept
+for compatibility: it costs nothing, and it covers any tool that still looks
+there. Do not treat its presence as evidence that Codex requires it.
+
+`bin/agents.link-skills.sh` symlinks both to `../.agents/skills`. It runs from the
 root `prepare` script, so `pnpm install` is enough, and can be re-run directly:
 
 ```sh
-pnpm skills:link
+pnpm agents:link-skills
 ```
 
 It is idempotent, leaves a real (non-symlink) directory alone, and does not fail
@@ -36,6 +42,10 @@ Developer Mode or elevation, in which case copy `.agents/skills` across instead.
 
 `.claude/` and `.codex/` are gitignored, so the link is rebuilt per clone rather
 than committed.
+
+Skills can be linked because every tool reads the same `SKILL.md`. Subagents
+cannot — their formats differ — so `.agents/agents` is generated instead of
+linked. See [subagents.md](subagents.md#source-of-truth).
 
 Linking the whole directory exposes every skill to auto-discovery, so all their
 descriptions load. That is the intended trade; if it proves noisy, switch to

@@ -103,15 +103,17 @@ Project skills and all their supporting files are committed under `.agents/skill
 Cloning the repository provides the reviewed versions, and Git is the only source
 of their contents.
 
-Root `package.json` exposes one skill command:
+Root `package.json` exposes one command for them:
 
 ```sh
-pnpm skills:link
+pnpm agents:link-skills
 ```
 
-`skills:link` symlinks `.claude/skills` and `.codex/skills` to `.agents/skills`
-so auto-discovering agents can see them. It runs from `prepare`, so
-`pnpm install` already does it. See [skills.md](skills.md#discoverability).
+`agents:link-skills` symlinks `.claude/skills` and `.codex/skills` to
+`.agents/skills`. Claude Code needs the link to discover them; Codex reads
+`.agents/skills` natively and keeps its link only for compatibility. It runs from
+`prepare`, so `pnpm install` already does it. See
+[skills.md](skills.md#discoverability).
 
 There is no install, update, or patch command. Skills are frozen repository
 content: adding, refreshing, or correcting one is a manual, reviewed edit, not a
@@ -119,6 +121,24 @@ command. Recover accidentally deleted skill files from Git rather than from
 upstream. See [skills.md](skills.md#adding-or-replacing-a-skill) for the
 procedure and [skills.md](skills.md#editing-a-skill) for the rules on editing a
 skill's text.
+
+## Subagent Commands
+
+Subagent definitions are committed under `.agents/agents` in one neutral format.
+
+```sh
+pnpm agents:generate-subagents
+```
+
+`agents:generate-subagents` renders each definition into `.claude/agents/<name>.md`
+and `.codex/agents/<name>.toml`. Unlike `agents:link-skills` this is generation
+rather than a symlink, because the two formats are incompatible. It runs from
+`prepare`, so `pnpm install` already does it — but generated output goes stale, so
+re-run it after editing a definition. See
+[subagents.md](subagents.md#source-of-truth).
+
+Both `agents:*` commands mirror their script name in `bin/`, with `:` in place of
+the dot. See [structure.md](structure.md#top-level-layout).
 
 ## Commit Hooks
 

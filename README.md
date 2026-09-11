@@ -35,6 +35,8 @@ for the current task.
   typechecking, tests, and Definition of Done.
 - [docs/repository/skills.md](docs/repository/skills.md) - available local
   AI-agent skills and when to load them.
+- [docs/repository/subagents.md](docs/repository/subagents.md) - subagent
+  definitions, the neutral source format, and generation per agent tool.
 - [docs/repository/mcp-servers.md](docs/repository/mcp-servers.md) -
   recommended MCP servers and when to use them.
 - [docs/repository/change-workflow.md](docs/repository/change-workflow.md) - safe
@@ -76,6 +78,8 @@ for the current task.
   [docs/repository/quality.md](docs/repository/quality.md) and
   [docs/repository/commands.md](docs/repository/commands.md).
 - Skill selection: add [docs/repository/skills.md](docs/repository/skills.md).
+- Subagent selection or authoring: add
+  [docs/repository/subagents.md](docs/repository/subagents.md).
 - MCP/tool selection: add
   [docs/repository/mcp-servers.md](docs/repository/mcp-servers.md).
 
@@ -99,6 +103,9 @@ This is a pnpm and Turborepo TypeScript monorepo.
   files. They are frozen repository content: available immediately after cloning,
   never downloaded or refreshed by a command, and corrected by editing the text in
   place. See [skills.md](docs/repository/skills.md).
+- `.agents/agents` contains subagent definitions in one neutral format.
+  `pnpm agents:generate-subagents` renders them into `.claude/agents` and `.codex/agents`,
+  whose formats are incompatible. See [subagents.md](docs/repository/subagents.md).
 - `.agents/plans/` contains temporary, Git-ignored implementation plans. Create
   the directory when needed and delete completed plans after updating permanent
   documentation. See [change workflow](docs/repository/change-workflow.md#temporary-implementation-plans).
