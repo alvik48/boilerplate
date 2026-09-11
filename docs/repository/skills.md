@@ -91,7 +91,7 @@ when adding, removing, or editing a skill.
 | `shadcn`                                                                                                                                                            | `shadcn/ui`                    |
 | `frontend-design`                                                                                                                                                   | `anthropics/skills`            |
 | `nestjs-best-practices`                                                                                                                                             | `kadajett/agent-nestjs-skills` |
-| `project-feature-workflow`                                                                                                                                          | Project-owned, written here    |
+| `project-feature-workflow`, `project-migration-workflow`                                                                                                            | Project-owned, written here    |
 
 Skills carrying their upstream license keep it: `frontend-design/LICENSE.txt` and
 the `license` field in several `SKILL.md` files must not be stripped.
@@ -172,10 +172,16 @@ and the configured `next-devtools` MCP. See [frontend.md](frontend.md) and
 | `prisma-driver-adapter-implementation` | Implementing or modifying Prisma driver adapter interfaces.                                      |
 | `skill-optimizer`                      | Improving skills themselves, activation rules, benchmark loops, regression triage.               |
 | `project-feature-workflow`             | Project-owned. Adding or changing a feature: owner, layer, implementation, verification, review. |
+| `project-migration-workflow`           | Project-owned. Moving a project from outside this workspace into it: inventory, owners, slices.  |
 
-`project-feature-workflow` is written and owned here rather than copied from
-upstream. It is procedural and links to the repository documents instead of
-restating them, so it cannot drift from them.
+`project-feature-workflow` and `project-migration-workflow` are written and owned
+here rather than copied from upstream. Both are procedural and link to the
+repository documents instead of restating them, so they cannot drift from them.
+
+The two are sequenced, not alternatives: `project-migration-workflow` decides
+where code arriving from outside the workspace belongs and in what order it
+lands, then hands off to `project-feature-workflow` for the shape of each ported
+slice.
 
 Both Vercel skills are scoped narrower here than they are upstream.
 
@@ -199,6 +205,9 @@ filters and pagination belong in the URL, not in a context.
 
 - Any feature work, backend or frontend: `project-feature-workflow` first, then
   the stack-specific skills below.
+- Moving an existing external project, service, or app into this workspace:
+  `project-migration-workflow` first. It routes to the template, stack, and DB
+  skills per phase.
 - Monorepo/package task: `turborepo`.
 - New backend service: `turborepo`, `nestjs-best-practices`, `node`.
 - Backend with DB: add `prisma-client-api` and `prisma-cli`.

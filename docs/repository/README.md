@@ -25,19 +25,20 @@ for the current task.
 > [code-design.md](code-design.md), [quality.md](quality.md). The rows below are
 > additive to that baseline.
 
-| Task                        | Load these files                                                                                                 |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Understand repository shape | [structure.md](structure.md), [development-rules.md](development-rules.md)                                       |
-| Run commands or debug Turbo | [commands.md](commands.md), [quality.md](quality.md)                                                             |
-| Create an app/package       | [templates.md](templates.md), [structure.md](structure.md), [env.md](env.md)                                     |
-| Backend/NestJS work         | [backend.md](backend.md), [env.md](env.md), [quality.md](quality.md)                                             |
-| Frontend/Next.js work       | [frontend.md](frontend.md), [quality.md](quality.md), [mcp-servers.md](mcp-servers.md)                           |
-| Shared UI work              | [frontend.md](frontend.md), [skills.md](skills.md), [mcp-servers.md](mcp-servers.md), inspect `packages/ui`      |
-| Database/Prisma work        | [databases.md](databases.md), [env.md](env.md), [quality.md](quality.md)                                         |
-| Refactor or extend code     | [change-workflow.md](change-workflow.md), [code-design.md](code-design.md), [mcp-servers.md](mcp-servers.md)     |
-| Plan implementation         | [change-workflow.md](change-workflow.md#temporary-implementation-plans)                                          |
-| Change an external contract | [documentation.md](documentation.md), [integration index](../integration/README.md), affected integration guides |
-| Choose AI skills or MCP     | [skills.md](skills.md), [mcp-servers.md](mcp-servers.md)                                                         |
+| Task                        | Load these files                                                                                                             |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Understand repository shape | [structure.md](structure.md), [development-rules.md](development-rules.md)                                                   |
+| Run commands or debug Turbo | [commands.md](commands.md), [quality.md](quality.md)                                                                         |
+| Create an app/package       | [templates.md](templates.md), [structure.md](structure.md), [env.md](env.md)                                                 |
+| Migrate an external project | [templates.md](templates.md), [structure.md](structure.md), [change-workflow.md](change-workflow.md), [skills.md](skills.md) |
+| Backend/NestJS work         | [backend.md](backend.md), [env.md](env.md), [quality.md](quality.md)                                                         |
+| Frontend/Next.js work       | [frontend.md](frontend.md), [quality.md](quality.md), [mcp-servers.md](mcp-servers.md)                                       |
+| Shared UI work              | [frontend.md](frontend.md), [skills.md](skills.md), [mcp-servers.md](mcp-servers.md), inspect `packages/ui`                  |
+| Database/Prisma work        | [databases.md](databases.md), [env.md](env.md), [quality.md](quality.md)                                                     |
+| Refactor or extend code     | [change-workflow.md](change-workflow.md), [code-design.md](code-design.md), [mcp-servers.md](mcp-servers.md)                 |
+| Plan implementation         | [change-workflow.md](change-workflow.md#temporary-implementation-plans)                                                      |
+| Change an external contract | [documentation.md](documentation.md), [integration index](../integration/README.md), affected integration guides             |
+| Choose AI skills or MCP     | [skills.md](skills.md), [mcp-servers.md](mcp-servers.md)                                                                     |
 
 ## Path-Based Routing
 
