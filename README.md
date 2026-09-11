@@ -59,6 +59,11 @@ for the current task.
   [docs/repository/templates.md](docs/repository/templates.md),
   [docs/repository/structure.md](docs/repository/structure.md), and
   [docs/repository/commands.md](docs/repository/commands.md).
+- Moving an existing project from outside this repository into it: add
+  [docs/repository/templates.md](docs/repository/templates.md),
+  [docs/repository/structure.md](docs/repository/structure.md), and
+  [docs/repository/change-workflow.md](docs/repository/change-workflow.md), then
+  load the `project-migration-workflow` skill.
 - Backend task: add [docs/repository/backend.md](docs/repository/backend.md). If
   it touches persistence, also add
   [docs/repository/databases.md](docs/repository/databases.md) and
