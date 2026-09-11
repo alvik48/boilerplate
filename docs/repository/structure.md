@@ -17,7 +17,7 @@ apps/               deployable applications
 packages/           shared libraries, tooling configs, database packages
 templates/          canonical source templates for new apps/packages
 config/             tool configs that can be relocated out of the root
-bin/                repository automation shell scripts
+bin/                repository automation scripts, named `<namespace>.<action>`
 infra/              local infrastructure compose files
 docs/repository/    AI-ready development documentation
 docs/integration/   external client and agent integration guidance
@@ -38,6 +38,13 @@ and required updates when external contracts change.
 are local to the checkout and are not transferred by Git to other clones or
 worktrees. See [change workflow](change-workflow.md#temporary-implementation-plans)
 for naming, progress updates, and cleanup rules.
+
+`bin/` groups scripts by the subject they act on rather than by language:
+`pm2.restart.sh`, `agents.link-skills.sh`, `agents.generate-subagents.mjs`. The
+npm script that wraps one carries the same name with `:` in place of the dot, so
+`pnpm agents:link-skills` and `bin/agents.link-skills.sh` are greppable from
+either end. That is why the script names keep their object — `agents:generate`
+would collide the moment a second thing under `.agents/` needs generating.
 
 `config/` holds the tool configs whose consumer passes an explicit path, so the
 location is free: `dependency-cruiser.cjs` (`pnpm deps:check`),

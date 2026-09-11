@@ -39,6 +39,7 @@ for the current task.
 | Plan implementation         | [change-workflow.md](change-workflow.md#temporary-implementation-plans)                                                      |
 | Change an external contract | [documentation.md](documentation.md), [integration index](../integration/README.md), affected integration guides             |
 | Choose AI skills or MCP     | [skills.md](skills.md), [mcp-servers.md](mcp-servers.md)                                                                     |
+| Author or select a subagent | [subagents.md](subagents.md), [skills.md](skills.md)                                                                         |
 
 ## Path-Based Routing
 
@@ -87,6 +88,8 @@ backend app and a DB package loads both.
 - Shared UI: `packages/ui`.
 - Project skills, frozen in Git and available after cloning: `.agents/skills/*`.
   Origins are recorded in [skills.md](skills.md#origins-and-local-edits).
+- Subagent definitions: `.agents/agents/*`, generated per tool by
+  `pnpm agents:generate-subagents`. See [subagents.md](subagents.md).
 - MCP server config: `.mcp.json`.
 
 ## Template Placeholders
