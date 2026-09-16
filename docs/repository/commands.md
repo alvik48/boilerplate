@@ -140,6 +140,22 @@ re-run it after editing a definition. See
 Both `agents:*` commands mirror their script name in `bin/`, with `:` in place of
 the dot. See [structure.md](structure.md#top-level-layout).
 
+## Code Index Commands
+
+```sh
+pnpm codegraph:init
+```
+
+Builds the CodeGraph index backing the `codegraph` MCP server, once per clone.
+It mirrors `bin/codegraph.init.sh` under the same naming convention as the
+`agents:*` commands above, but unlike them it does **not** run from `prepare`:
+indexing the tree costs minutes and 6GB of RAM, which every `pnpm install` and
+every CI run would otherwise pay for an index they never query.
+
+Re-running it is a no-op once the index exists — a watcher keeps it current.
+Force a full rebuild with `pnpm exec codegraph index --force`. See
+[mcp-servers.md](mcp-servers.md#codegraph-index).
+
 ## Commit Hooks
 
 Husky pre-commit runs `lint-staged`: Prettier plus a syntax-only ESLint pass over
