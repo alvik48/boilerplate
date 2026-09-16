@@ -13,6 +13,7 @@ audience: [developer, agent]
 ```text
 .agents/skills/     project AI-agent skills and supporting files
 .agents/plans/      temporary local implementation plans, ignored by Git
+.codegraph/         local CodeGraph index, ignored by Git
 apps/               deployable applications
 packages/           shared libraries, tooling configs, database packages
 templates/          canonical source templates for new apps/packages
@@ -39,6 +40,11 @@ are local to the checkout and are not transferred by Git to other clones or
 worktrees. See [change workflow](change-workflow.md#temporary-implementation-plans)
 for naming, progress updates, and cleanup rules.
 
+`.codegraph/` holds a SQLite index of this checkout, rebuilt locally by
+`pnpm codegraph:init` and never committed. Its committed counterpart is the root
+`codegraph.json`, which configures what gets indexed. See
+[mcp-servers.md](mcp-servers.md#codegraph-index).
+
 `bin/` groups scripts by the subject they act on rather than by language:
 `pm2.restart.sh`, `agents.link-skills.sh`, `agents.generate-subagents.mjs`. The
 npm script that wraps one carries the same name with `:` in place of the dot, so
@@ -61,6 +67,7 @@ flag, and relocating them would break resolution rather than tidy it:
 | `ecosystem.config.cjs` | PM2 resolves each app's relative `cwd` against the config file's folder |
 | `turbo.json`           | Fixed name at the workspace root                                        |
 | `pnpm-workspace.yaml`  | Fixed name at the workspace root                                        |
+| `codegraph.json`       | CodeGraph resolves it relative to the indexed project root              |
 
 The root `turbo.json` also has to stay strict JSON, unlike
 `templates/packages.db/turbo.json`, because the docs inventory check parses it

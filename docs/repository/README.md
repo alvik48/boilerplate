@@ -91,6 +91,9 @@ backend app and a DB package loads both.
 - Subagent definitions: `.agents/agents/*`, generated per tool by
   `pnpm agents:generate-subagents`. See [subagents.md](subagents.md).
 - MCP server config: `.mcp.json`.
+- CodeGraph indexing config: `codegraph.json` (committed, strict JSON). The index
+  itself is local and gitignored; build it with `pnpm codegraph:init`. See
+  [mcp-servers.md](mcp-servers.md#codegraph-index).
 
 ## Template Placeholders
 

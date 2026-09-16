@@ -78,6 +78,10 @@ generated/
 /.claude/
 /.codex/
 
+# CodeGraph index: a SQLite database plus its write-ahead log, rewritten by the
+# file watcher on every save. Rebuilt locally with `pnpm codegraph:init`.
+/.codegraph/
+
 # Temporary AI implementation plans
 /.agents/plans/
 

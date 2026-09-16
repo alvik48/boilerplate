@@ -15,6 +15,11 @@
     "webstorm": {
       "url": "http://127.0.0.1:64342/sse",
       "type": "sse"
+    },
+    "codegraph": {
+      "type": "stdio",
+      "command": "pnpm",
+      "args": ["exec", "codegraph", "serve", "--mcp"]
     }
   }
 }
